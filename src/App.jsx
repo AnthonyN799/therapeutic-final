@@ -413,7 +413,16 @@ export default function App() {
             </div>
 
             <div className="bg-white p-10 rounded-[3rem] shadow-2xl shadow-black/50">
-              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+              <form 
+  className="space-y-4" 
+  action="https://api.web3forms.com/submit" 
+  method="POST"
+>
+  {f23546d0-7c35-4655-adee-b6af9841d1cd}
+  <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE" />
+  
+  {f23546d0-7c35-4655-adee-b6af9841d1cd}
+  <input type="hidden" name="subject" value="New Wholesale Inquiry from Website" />
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Your Name</label>
