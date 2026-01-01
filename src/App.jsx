@@ -1,0 +1,466 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Droplets, 
+  Wind, 
+  Flame, 
+  Sparkles, 
+  ShieldCheck, 
+  Mail, 
+  Phone, 
+  MapPin, 
+  ChevronRight, 
+  Leaf, 
+  Info,
+  Maximize2,
+  X,
+  Users,
+  CheckCircle2,
+  ArrowRight,
+  MessageSquare,
+  Activity
+} from 'lucide-react';
+
+const products = [
+  {
+    id: 1,
+    name: "PURE ICE Gel",
+    category: "Cryo-Recovery",
+    tagline: "Instant Cooling Revitalization",
+    description: "A fast-absorbing cooling gel designed to provide an immediate refreshing sensation. Perfect for post-session application to revitalize tired skin and muscles.",
+    keyFeatures: ["Long-lasting cooling", "Natural Eucalyptus essential oil", "Quick-dry formula"],
+    activeIngredients: ["Menthol", "Eucalyptus Globulus Leaf Oil"],
+    usage: "Apply a thin layer 3–5 times daily to desired areas. Ideal for post-activity refreshment.",
+    packaging: "100 mL Professional Tube",
+    color: "bg-blue-50",
+    accent: "text-blue-600",
+    border: "border-blue-200",
+    icon: <Wind className="w-6 h-6" />
+  },
+  {
+    id: 2,
+    name: "ACTIFLAM Cream",
+    category: "Thermal Comfort",
+    tagline: "Advanced Warming Sensation",
+    description: "A specialized cream that provides a gentle, soothing warmth. Formulated with rosemary to help prepare the skin and muscles for manual therapy.",
+    keyFeatures: ["Sustained warming effect", "Non-greasy professional texture", "Botanical Rosemary infusion"],
+    activeIngredients: ["Methyl Salicylate", "Rosemary Essential Oil"],
+    usage: "Gently massage a thin layer into the skin 2–3 times daily.",
+    packaging: "100 mL Professional Tube",
+    color: "bg-orange-50",
+    accent: "text-orange-600",
+    border: "border-orange-200",
+    icon: <Flame className="w-6 h-6" />
+  },
+  {
+    id: 3,
+    name: "Targeted Comfort Massage Oil",
+    category: "Professional Massage",
+    tagline: "Smooth Glide & Thermal Support",
+    description: "A high-performance massage oil that balances superior glide with a comforting warming effect. Designed for deep tissue work and muscle preparation.",
+    keyFeatures: ["Enhanced tactile feedback", "Soothing thermal support", "Professional grade viscosity"],
+    activeIngredients: ["Methyl Salicylate", "Rosemary Extract"],
+    usage: "Warm a small amount in hands and massage gently until fully absorbed.",
+    packaging: "250 mL Professional Bottle",
+    color: "bg-amber-50",
+    accent: "text-amber-600",
+    border: "border-amber-200",
+    icon: <Droplets className="w-6 h-6" />
+  },
+  {
+    id: 4,
+    name: "Aromatherapy Range",
+    category: "Sensory Wellness",
+    tagline: "Holistic Skin Nourishment",
+    description: "A curated collection of premium botanical oils formulated to nourish the skin while providing a calming sensory experience during therapy sessions.",
+    keyFeatures: ["Pure botanical extracts", "Hydrating & lightweight", "Five signature scent profiles"],
+    activeIngredients: ["Jasmine", "Chamomile", "Lavender", "Coconut", "Rosemary"],
+    usage: "Ideal for full-body massage or localized hydration.",
+    packaging: "250 mL Professional Bottles",
+    color: "bg-purple-50",
+    accent: "text-purple-600",
+    border: "border-purple-200",
+    icon: <Sparkles className="w-6 h-6" />
+  },
+  {
+    id: 5,
+    name: "Firmessence Cream",
+    category: "Skin Toning",
+    tagline: "Natural Firming & Elasticity",
+    description: "A specialized cosmetic cream formulated with Cypress oil to improve skin texture and elasticity. Promotes a smoother, more toned skin appearance.",
+    keyFeatures: ["Skin-firming Cypress oil", "Improves skin smoothness", "Hydrating formula"],
+    activeIngredients: ["Cypress Essential Oil", "Shea Butter Base"],
+    usage: "Massage into targeted areas twice daily using circular motions.",
+    packaging: "100 mL Professional Tube",
+    color: "bg-emerald-50",
+    accent: "text-emerald-600",
+    border: "border-emerald-200",
+    icon: <Leaf className="w-6 h-6" />
+  },
+  {
+    id: 6,
+    name: "Firmessence Oil",
+    category: "Skin Toning",
+    tagline: "Intensive Smoothing Oil",
+    description: "A potent blend of cypress and vitamin E designed for professional massage. Focuses on improving skin tone and reducing the appearance of uneven texture.",
+    keyFeatures: ["Antioxidant Vitamin E", "High-glide toning formula", "Absorbs without heavy residue"],
+    activeIngredients: ["Cypress Essential Oil", "Vitamin E"],
+    usage: "For professional use. Apply to dampened skin for maximum absorption during massage.",
+    packaging: "250 mL Professional Bottle",
+    color: "bg-teal-50",
+    accent: "text-teal-600",
+    border: "border-teal-200",
+    icon: <Droplets className="w-6 h-6" />
+  }
+];
+
+const faqs = [
+  {
+    q: "Are these products professional-grade?",
+    a: "Yes. Our formulations are specifically designed for physiotherapists, osteopaths, and massage therapists, focusing on the correct glide-to-absorption ratio for clinical manual therapy."
+  },
+  {
+    q: "Do you offer wholesale pricing for clinics?",
+    a: "Absolutely. We provide tiered wholesale pricing for physical therapy clinics, gyms, and sports clubs. Use our inquiry form below to receive our B2B price list."
+  },
+  {
+    q: "Are the products safe for sensitive skin?",
+    a: "Our products use cosmetic-grade botanical oils. However, as with any professional topical, we recommend a small patch test for clients with known hypersensitivity to essential oils."
+  }
+];
+
+export default function App() {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-white font-sans text-slate-900 scroll-smooth">
+      {/* Navigation */}
+      <nav className={`fixed top-0 w-full z-[100] transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-md border-b border-slate-100 py-4 shadow-sm' : 'bg-transparent py-6'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
+              <Leaf className="text-white w-5 h-5" />
+            </div>
+            <span className="text-lg font-bold tracking-tight">THERAPEUTIC OILS</span>
+          </div>
+          <div className="hidden md:flex items-center space-x-10 text-[13px] font-bold uppercase tracking-widest text-slate-500">
+            <a href="#benefits" className="hover:text-slate-900 transition-colors">Why Us</a>
+            <a href="#products" className="hover:text-slate-900 transition-colors">Products</a>
+            <a href="#faq" className="hover:text-slate-900 transition-colors">FAQ</a>
+            <a href="#contact" className="px-5 py-2.5 bg-slate-900 text-white rounded-full hover:bg-slate-700 transition-all">Wholesale Inquiry</a>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <header className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-50 rounded-full blur-[120px] opacity-60" />
+          <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-50 rounded-full blur-[120px] opacity-60" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-slate-100 rounded-full text-slate-600 text-[11px] font-bold uppercase tracking-widest mb-6">
+              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+              <span>Professional Physiotherapy Solutions</span>
+            </div>
+            <h1 className="text-6xl md:text-8xl font-black text-slate-900 leading-[0.95] mb-8 tracking-tighter">
+              Performance <br />Through <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-500 italic font-light">Botanicals.</span>
+            </h1>
+            <p className="text-xl text-slate-600 leading-relaxed mb-10 max-w-lg">
+              The professional choice for manual therapy. Our high-performance gels and oils bridge the gap between clinical efficacy and natural skin care.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <a href="#products" className="px-8 py-5 bg-slate-900 text-white rounded-2xl font-bold flex items-center hover:shadow-2xl hover:bg-slate-800 transition-all group">
+                Browse Solutions <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </a>
+              <a href="#contact" className="px-8 py-5 border border-slate-200 rounded-2xl font-bold text-slate-700 hover:bg-slate-50 transition-all">
+                Request Samples
+              </a>
+            </div>
+            
+            <div className="mt-12 flex items-center space-x-8">
+               <div className="flex -space-x-3">
+                 {[1,2,3,4].map(i => (
+                   <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[10px] font-bold overflow-hidden">
+                     <Users className="w-5 h-5 text-slate-400" />
+                   </div>
+                 ))}
+               </div>
+               <p className="text-sm font-medium text-slate-500">Trusted by <span className="text-slate-900 font-bold">500+ Clinics</span> across the region</p>
+            </div>
+          </div>
+          
+          <div className="relative">
+            <div className="relative aspect-square max-w-md mx-auto">
+               <div className="absolute inset-0 bg-gradient-to-tr from-slate-200 to-slate-50 rounded-[4rem] rotate-6 transform" />
+               <div className="absolute inset-0 bg-white border border-slate-100 rounded-[4rem] flex flex-col items-center justify-center p-12 text-center shadow-2xl">
+                  <Activity className="w-16 h-16 text-slate-900 mb-6" />
+                  <h3 className="text-3xl font-bold mb-4">Pure Ice</h3>
+                  <div className="flex items-center space-x-1 mb-6">
+                    {[1,2,3,4,5].map(i => <Sparkles key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
+                  </div>
+                  <p className="text-slate-500 text-sm italic">"The glide and absorption are perfectly balanced for deep tissue work. My clients love the scent."</p>
+                  <div className="mt-8 pt-8 border-t border-slate-100 w-full">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Featured Product</span>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Social Proof Bar */}
+      <section className="bg-slate-50 py-12 border-y border-slate-100 overflow-hidden whitespace-nowrap">
+        <div className="flex space-x-24 items-center justify-center opacity-40 animate-marquee">
+          {["PHYSIO CENTER", "ELITE RECOVERY", "SPORTS OSTEOPATHY", "CLINIC PLUS", "WELLNESS LAB"].map((name, i) => (
+             <span key={i} className="text-2xl font-black tracking-tighter italic">{name}</span>
+          ))}
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section id="benefits" className="py-32 max-w-7xl mx-auto px-6">
+        <div className="text-center mb-24">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Engineered for the Professional Hand</h2>
+          <p className="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">
+            We understand that your hands are your tools. Our products are formulated to support your technique while nourishing your skin.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-12">
+          <div className="group">
+             <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+               <Activity className="w-8 h-8" />
+             </div>
+             <h4 className="text-xl font-bold mb-4">Precision Glide</h4>
+             <p className="text-slate-500 leading-relaxed">Perfectly calibrated viscosity allows for deep tissue work without excessive slipperiness or early drying.</p>
+          </div>
+          <div className="group">
+             <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+               <Leaf className="w-8 h-8" />
+             </div>
+             <h4 className="text-xl font-bold mb-4">Non-Sensitizing</h4>
+             <p className="text-slate-500 leading-relaxed">Tested formulations that minimize skin irritation for therapists who apply product 20+ times a day.</p>
+          </div>
+          <div className="group">
+             <div className="w-16 h-16 bg-purple-50 text-purple-600 rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+               <ShieldCheck className="w-8 h-8" />
+             </div>
+             <h4 className="text-xl font-bold mb-4">Cosmetic Compliance</h4>
+             <p className="text-slate-500 leading-relaxed">Pure botanical extracts that meet strict safety standards, ensuring a premium experience for your clients.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Product Grid */}
+      <section id="products" className="py-32 bg-slate-900 text-white rounded-[4rem] mx-4 overflow-hidden relative">
+        <div className="absolute top-0 right-0 p-32 opacity-10 pointer-events-none">
+          <Droplets className="w-96 h-96" />
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-20">
+            <div className="max-w-xl">
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-slate-500 mb-4 block">Our Formulations</span>
+              <h2 className="text-4xl md:text-6xl font-bold leading-tight">Tailored solutions for every therapy style.</h2>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {products.map((product) => (
+              <div 
+                key={product.id}
+                className="group relative p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 cursor-pointer"
+                onClick={() => setSelectedProduct(product)}
+              >
+                <div className="flex justify-between items-start mb-8">
+                  <div className={`p-4 rounded-2xl bg-white/10 ${product.accent}`}>
+                    {product.icon}
+                  </div>
+                  <Maximize2 className="w-5 h-5 text-white/20 group-hover:text-white transition-colors" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2 block">{product.category}</span>
+                <h3 className="text-2xl font-bold mb-3">{product.name}</h3>
+                <p className="text-slate-400 text-sm mb-6 line-clamp-2">{product.tagline}</p>
+                <div className="flex items-center text-xs font-bold text-slate-500 border-t border-white/5 pt-6">
+                   {product.packaging}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Product Modal */}
+      {selectedProduct && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl">
+          <div className="bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[3rem] relative shadow-2xl animate-in fade-in zoom-in duration-300">
+            <button 
+              onClick={() => setSelectedProduct(null)}
+              className="absolute top-8 right-8 p-3 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors z-10"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="grid md:grid-cols-2">
+              <div className={`p-12 ${selectedProduct.color} flex flex-col justify-center`}>
+                <div className={`p-8 rounded-[2rem] bg-white shadow-xl mb-8 w-fit ${selectedProduct.accent}`}>
+                   {React.cloneElement(selectedProduct.icon, { className: "w-24 h-24" })}
+                </div>
+                <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 mb-4">Professional Overview</h4>
+                <p className="text-slate-600 text-xl leading-relaxed font-medium">
+                  "{selectedProduct.description}"
+                </p>
+              </div>
+
+              <div className="p-12">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 block">{selectedProduct.category}</span>
+                <h2 className="text-4xl font-bold mb-4">{selectedProduct.name}</h2>
+                <p className={`text-lg font-bold ${selectedProduct.accent} mb-8`}>{selectedProduct.tagline}</p>
+
+                <div className="space-y-8">
+                  <div>
+                    <h5 className="text-xs font-black uppercase text-slate-900 mb-4 flex items-center">
+                      <CheckCircle2 className="w-4 h-4 mr-2" /> Key Benefits
+                    </h5>
+                    <ul className="space-y-3">
+                      {selectedProduct.keyFeatures.map((f, i) => (
+                        <li key={i} className="flex items-center text-slate-600 text-sm">
+                          <span className="w-1.5 h-1.5 rounded-full bg-slate-900 mr-3" />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                    <h5 className="text-xs font-black uppercase text-slate-900 mb-2">Usage Guide</h5>
+                    <p className="text-slate-500 text-sm leading-relaxed">{selectedProduct.usage}</p>
+                  </div>
+
+                  <button 
+                    onClick={() => { setSelectedProduct(null); window.location.href = "#contact"; }}
+                    className="w-full py-5 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all"
+                  >
+                    Wholesale Quote
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* FAQ Section */}
+      <section id="faq" className="py-32 bg-white max-w-4xl mx-auto px-6">
+        <div className="text-center mb-20">
+          <h2 className="text-4xl font-bold mb-4">Common Questions</h2>
+          <p className="text-slate-500">Everything you need to know about our partnership.</p>
+        </div>
+        <div className="space-y-6">
+          {faqs.map((faq, i) => (
+            <div key={i} className="p-8 rounded-3xl bg-slate-50 border border-slate-100">
+              <h4 className="text-lg font-bold mb-4 flex items-center">
+                <MessageSquare className="w-5 h-5 mr-3 text-slate-400" />
+                {faq.q}
+              </h4>
+              <p className="text-slate-600 leading-relaxed text-sm ml-8">{faq.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Lead Capture Form */}
+      <section id="contact" className="py-32 px-4">
+        <div className="max-w-6xl mx-auto bg-slate-950 rounded-[4rem] p-12 md:p-24 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
+          
+          <div className="grid lg:grid-cols-2 gap-20 items-center relative z-10">
+            <div>
+              <h2 className="text-5xl md:text-6xl font-bold text-white mb-8 tracking-tighter leading-none">Elevate your practice <span className="text-slate-600">today.</span></h2>
+              <p className="text-slate-400 text-lg mb-12">
+                Join our network of elite physiotherapy clinics. Leave your details to receive our professional catalogue and a complimentary sample pack.
+              </p>
+              
+              <div className="space-y-6">
+                <div className="flex items-center space-x-4 text-white">
+                  <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
+                    <Phone className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500 font-bold uppercase">Direct Line</p>
+                    <p className="font-bold">+961 71 950 777</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4 text-white">
+                  <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500 font-bold uppercase">Wholesale Dept</p>
+                    <p className="font-bold">info@therapeuticoils.com</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-10 rounded-[3rem] shadow-2xl shadow-black/50">
+              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Your Name</label>
+                    <input type="text" className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" placeholder="John Doe" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Clinic Name</label>
+                    <input type="text" className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" placeholder="Elite Physio" />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Work Email</label>
+                  <input type="email" className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" placeholder="john@clinic.com" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Message</label>
+                  <textarea rows="3" className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm resize-none" placeholder="How can we help?" />
+                </div>
+                <button className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 mt-4">
+                  Request B2B Pricing
+                </button>
+                <p className="text-[10px] text-center text-slate-400 mt-4">Sample requests are subject to availability. Regional delivery only.</p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-20 border-t border-slate-100">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-12">
+            <div className="flex items-center space-x-2 mb-8 md:mb-0">
+               <Leaf className="w-6 h-6" />
+               <span className="text-xl font-bold">THERAPEUTIC OILS</span>
+            </div>
+            <div className="flex space-x-12 text-[11px] font-bold uppercase tracking-widest text-slate-400">
+              <a href="#" className="hover:text-slate-900 transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-slate-900 transition-colors">Safety Data</a>
+              <a href="#" className="hover:text-slate-900 transition-colors">Compliance</a>
+            </div>
+          </div>
+          <div className="text-center text-slate-400 text-xs">
+            © 2024 Therapeutic Oils. Formulated in Lebanon. Distributed Worldwide.
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
