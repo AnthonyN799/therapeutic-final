@@ -207,7 +207,7 @@ export default function App() {
                   <div className="flex items-center space-x-1 mb-6">
                     {[1,2,3,4,5].map(i => <Sparkles key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
                   </div>
-                  <p className="text-slate-500 text-sm italic">"The glide and absorption are perfectly balanced for deep tissue work. My clients love the relief og the cooling effect."</p>
+                  <p className="text-slate-500 text-sm italic">"The glide and absorption are perfectly balanced for deep tissue work. My clients love its efficacy."</p>
                   <div className="mt-8 pt-8 border-t border-slate-100 w-full">
                     <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Featured Product</span>
                   </div>
