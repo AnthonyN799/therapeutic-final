@@ -231,7 +231,7 @@ export default function App() {
         <div className="text-center mb-24">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Engineered for the Professional Hand</h2>
           <p className="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">
-            We understand that your hands are your tools. Our products are formulated to support your technique while nourishing your skin.
+            We aim to build strategic partnerships with local practitioners through comprehensive packages and high-performance formulations.
           </p>
         </div>
 
