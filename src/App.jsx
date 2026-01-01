@@ -397,7 +397,7 @@ export default function App() {
                   </div>
                   <div>
                     <p className="text-xs text-slate-500 font-bold uppercase">Direct Line</p>
-                    <p className="font-bold">+961 71 950 777</p>
+                    <p className="font-bold">+961 03 867 273</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4 text-white">
