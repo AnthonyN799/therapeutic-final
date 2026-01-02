@@ -220,7 +220,7 @@ export default function App() {
       {/* Social Proof Bar */}
       <section className="bg-slate-50 py-12 border-y border-slate-100 overflow-hidden whitespace-nowrap">
         <div className="flex space-x-24 items-center justify-center opacity-40 animate-marquee">
-          {["PHYSIO CENTER", "ELITE RECOVERY", "SPORTS OSTEOPATHY", "CLINIC PLUS", "WELLNESS LAB"].map((name, i) => (
+          {["PHYSIOTHERAPY CENTERS", "ELITE RECOVERY", "SPORTS CENTERS", "CLINIC AND MORE"].map((name, i) => (
              <span key={i} className="text-2xl font-black tracking-tighter italic">{name}</span>
           ))}
         </div>
