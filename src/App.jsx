@@ -194,7 +194,7 @@ export default function App() {
                    </div>
                  ))}
                </div>
-               <p className="text-sm font-medium text-slate-500">Trusted by <span className="text-slate-900 font-bold">500+ Clinics</span> across the region</p>
+               <p className="text-sm font-medium text-slate-500">Trusted by <span className="text-slate-900 font-bold"> professionals </span> across the region</p>
             </div>
           </div>
           
