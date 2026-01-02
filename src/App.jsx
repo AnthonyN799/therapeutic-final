@@ -207,7 +207,7 @@ export default function App() {
                   <div className="flex items-center space-x-1 mb-6">
                     {[1,2,3,4,5].map(i => <Sparkles key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
                   </div>
-                  <p className="text-slate-500 text-sm italic">"The glide and absorption are perfectly balanced for deep tissue work. My clients love its efficacy."</p>
+                  <p className="text-slate-500 text-sm italic">"The glide, absorption and cooling effect are perfect. My clients love it. ~Dr. Ralph J. Ghosn"</p>
                   <div className="mt-8 pt-8 border-t border-slate-100 w-full">
                     <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Featured Product</span>
                   </div>
@@ -218,10 +218,30 @@ export default function App() {
       </header>
 
       {/* Social Proof Bar */}
-      <section className="bg-slate-50 py-12 border-y border-slate-100 overflow-hidden whitespace-nowrap">
-        <div className="flex space-x-24 items-center justify-center opacity-40 animate-marquee">
-          {["PHYSIOTHERAPY CENTERS", "ELITE RECOVERY", "SPORTS CENTERS", "CLINICS AND MORE"].map((name, i) => (
-             <span key={i} className="text-2xl font-black tracking-tighter italic">{name}</span>
+     {/* Social Proof Bar - NOW SLIDING */}
+      <section className="bg-slate-50 py-12 border-y border-slate-100 overflow-hidden relative">
+        {/* This style tag defines the sliding animation right here */}
+        <style>{`
+          @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .animate-scroll {
+            animation: scroll 40s linear infinite;
+          }
+        `}</style>
+        
+        {/* The Sliding Container */}
+        <div className="flex w-max animate-scroll hover:[animation-play-state:paused]">
+          {/* We repeat the list twice to create the infinite loop effect */}
+          {[1, 2].map((i) => (
+            <div key={i} className="flex space-x-24 px-12 shrink-0">
+              {["PHYSIOTHERAPY CENTERS", "ELITE RECOVERY", "SPORTS CENTERS", "CLINICS AND MORE", "WELLNESS LABS", "MANUAL THERAPY"].map((name, index) => (
+                 <span key={index} className="text-2xl font-black tracking-tighter italic opacity-40 text-slate-900">
+                   {name}
+                 </span>
+              ))}
+            </div>
           ))}
         </div>
       </section>
