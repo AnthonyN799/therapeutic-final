@@ -1,4 +1,4 @@
-fimport React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Droplets, 
   Wind, 
@@ -51,7 +51,7 @@ const products = [
     border: "border-orange-200",
     icon: <Flame className="w-6 h-6" />
   },
-  {
+ {
     id: 3,
     name: "Targeted Comfort Massage Oil",
     category: "Professional Massage",
