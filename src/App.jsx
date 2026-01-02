@@ -57,7 +57,7 @@ const products = [
     category: "Professional Massage",
     tagline: "Smooth Glide & Thermal Support",
     description: "A high-performance massage oil that balances superior glide with a comforting warming effect. Designed for deep tissue work and muscle preparation.",
-    keyFeatures: ["Enhanced tactile feedback", "Soothing thermal support", "Available in Vanilla, Chamomile, Coconut, Oud, Musk and Unscented."],
+    keyFeatures: ["Enhanced tactile feedback", "Soothing thermal support", "Available in Vanilla, Chamomile, Coconut, Oud, Musk and Unscented"],
     activeIngredients: ["Methyl Salicylate", "Rosemary Extract"],
     usage: "Warm a small amount in hands and massage gently until fully absorbed.",
     packaging: "250 mL Professional Bottle",
