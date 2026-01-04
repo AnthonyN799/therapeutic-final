@@ -31,7 +31,7 @@ const heroSlides = [
     id: 2,
     name: "Massage Lotion",
     image: null, 
-    icon: <Sparkles className="w-16 h-16 text-purple-600 mb-6" />,
+    icon: <Sparkles className="w-12 h-12 md:w-16 md:h-16 text-purple-600 mb-4 md:mb-6" />,
     quote: "Finally a lotion that hydrates without leaving that sticky residue. Perfect for my Swedish massage clients.",
     color: "bg-purple-50"
   }
@@ -156,9 +156,6 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // NOTE: I deleted the "useEffect" timer here. 
-  // The Carousel will now only move when you click the dots.
-
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 scroll-smooth">
       {/* Navigation */}
@@ -180,22 +177,22 @@ export default function App() {
       </nav>
 
       {/* Hero Section */}
-      <header className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+      <header className="relative min-h-screen flex items-center pt-24 md:pt-20 overflow-hidden pb-12">
         <div className="absolute inset-0 z-0">
           <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-50 rounded-full blur-[120px] opacity-60" />
           <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-50 rounded-full blur-[120px] opacity-60" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-16 items-center">
-          <div>
+        <div className="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="order-2 lg:order-1">
             <div className="inline-flex items-center space-x-2 px-3 py-1 bg-slate-100 rounded-full text-slate-600 text-[11px] font-bold uppercase tracking-widest mb-6">
               <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
               <span>Professional Physiotherapy Solutions</span>
             </div>
-            <h1 className="text-6xl md:text-8xl font-black text-slate-900 leading-[0.95] mb-8 tracking-tighter">
+            <h1 className="text-5xl md:text-8xl font-black text-slate-900 leading-[0.95] mb-6 md:mb-8 tracking-tighter">
               Performance <br />Through <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-500 italic font-light">Botanicals.</span>
             </h1>
-            <p className="text-xl text-slate-600 leading-relaxed mb-10 max-w-lg">
+            <p className="text-lg md:text-xl text-slate-600 leading-relaxed mb-8 md:mb-10 max-w-lg">
               The professional choice for manual therapy. Our high-performance gels and oils bridge the gap between clinical efficacy and natural skin care.
             </p>
             <div className="flex flex-wrap gap-4">
@@ -219,8 +216,8 @@ export default function App() {
             </div>
           </div>
           
-          {/* SLIDING HERO CARD */}
-          <div className="relative h-[500px] w-full max-w-md mx-auto">
+          {/* SLIDING HERO CARD - MOBILE OPTIMIZED */}
+          <div className="order-1 lg:order-2 relative h-[550px] md:h-[500px] w-full max-w-md mx-auto mt-8 lg:mt-0">
             {heroSlides.map((slide, index) => (
               <div 
                 key={slide.id}
@@ -230,14 +227,14 @@ export default function App() {
               >
                 <div className="relative aspect-square">
                    {/* Background Blob */}
-                   <div className={`absolute inset-0 bg-gradient-to-tr from-slate-200 to-slate-50 rounded-[4rem] rotate-6 transform transition-transform duration-700 ${index === currentSlide ? 'rotate-6' : 'rotate-0'}`} />
+                   <div className={`absolute inset-0 bg-gradient-to-tr from-slate-200 to-slate-50 rounded-[3rem] md:rounded-[4rem] rotate-6 transform transition-transform duration-700 ${index === currentSlide ? 'rotate-6' : 'rotate-0'}`} />
                    
                    {/* The Card Content */}
-                   <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[4rem] flex flex-col items-center justify-center p-8 text-center shadow-2xl overflow-hidden`}>
+                   <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[3rem] md:rounded-[4rem] flex flex-col items-center justify-center p-6 md:p-8 text-center shadow-2xl overflow-hidden`}>
                       
                       {/* Logic: Show Image if it exists, otherwise show Icon */}
                       {slide.image ? (
-                        <div className="w-64 h-64 mb-4 relative flex items-center justify-center">
+                        <div className="w-48 h-48 md:w-64 md:h-64 mb-4 relative flex items-center justify-center">
                           <img 
                             src={slide.image} 
                             alt={slide.name} 
@@ -248,27 +245,28 @@ export default function App() {
                         <div className="mb-4">{slide.icon}</div>
                       )}
 
-                      <h3 className="text-3xl font-bold mb-4">{slide.name}</h3>
-                      <div className="flex items-center space-x-1 mb-6 justify-center">
+                      <h3 className="text-2xl md:text-3xl font-bold mb-4">{slide.name}</h3>
+                      <div className="flex items-center space-x-1 mb-4 md:mb-6 justify-center">
                         {[1,2,3,4,5].map(i => <Sparkles key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
                       </div>
-                      <p className="text-slate-500 text-sm italic">"{slide.quote}"</p>
+                      <p className="text-slate-500 text-xs md:text-sm italic px-2">"{slide.quote}"</p>
                       
-                      <div className="mt-8 pt-8 border-t border-slate-100 w-full">
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Featured Product</span>
+                      <div className="mt-6 md:mt-8 pt-6 md:pt-8 border-t border-slate-100 w-full">
+                        <span className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Featured Product</span>
                       </div>
                    </div>
                 </div>
               </div>
             ))}
             
-            {/* The Little Dots at the bottom to show which slide is active */}
-            <div className="absolute -bottom-12 left-0 right-0 flex justify-center space-x-2">
+            {/* Dots - Larger touch area for mobile */}
+            <div className="absolute -bottom-12 left-0 right-0 flex justify-center space-x-4">
               {heroSlides.map((_, index) => (
                 <button 
                   key={index}
                   onClick={() => setCurrentSlide(index)}
-                  className={`w-2 h-2 rounded-full transition-all ${index === currentSlide ? 'bg-slate-900 w-8' : 'bg-slate-300'}`}
+                  className={`h-3 rounded-full transition-all duration-300 ${index === currentSlide ? 'bg-slate-900 w-10' : 'bg-slate-300 w-3'}`}
+                  aria-label={`Go to slide ${index + 1}`}
                 />
               ))}
             </div>
@@ -292,7 +290,7 @@ export default function App() {
           {[1, 2].map((i) => (
             <div key={i} className="flex space-x-24 px-12 shrink-0">
               {["PHYSIOTHERAPY CENTERS", "ELITE RECOVERY", "SPORTS CENTERS", "CLINICS AND MORE", "WELLNESS LABS", "MANUAL THERAPY"].map((name, index) => (
-                 <span key={index} className="text-2xl font-black tracking-tighter italic opacity-40 text-slate-900">
+                 <span key={index} className="text-xl md:text-2xl font-black tracking-tighter italic opacity-40 text-slate-900">
                    {name}
                  </span>
               ))}
@@ -302,8 +300,8 @@ export default function App() {
       </section>
 
       {/* Benefits Section */}
-      <section id="benefits" className="py-32 max-w-7xl mx-auto px-6">
-        <div className="text-center mb-24">
+      <section id="benefits" className="py-24 md:py-32 max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16 md:mb-24">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Engineered for the Professional Hand</h2>
           <p className="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">
             We aim to build strategic partnerships with local practitioners through comprehensive packages and high-performance formulations.
@@ -336,7 +334,7 @@ export default function App() {
       </section>
 
       {/* Product Grid */}
-      <section id="products" className="py-32 bg-slate-900 text-white rounded-[4rem] mx-4 overflow-hidden relative">
+      <section id="products" className="py-24 md:py-32 bg-slate-900 text-white rounded-[3rem] md:rounded-[4rem] mx-4 overflow-hidden relative">
         <div className="absolute top-0 right-0 p-32 opacity-10 pointer-events-none">
           <Droplets className="w-96 h-96" />
         </div>
@@ -435,7 +433,7 @@ export default function App() {
       )}
 
       {/* FAQ Section */}
-      <section id="faq" className="py-32 bg-white max-w-4xl mx-auto px-6">
+      <section id="faq" className="py-24 md:py-32 bg-white max-w-4xl mx-auto px-6">
         <div className="text-center mb-20">
           <h2 className="text-4xl font-bold mb-4">Common Questions</h2>
           <p className="text-slate-500">Everything you need to know about our partnership.</p>
@@ -454,13 +452,13 @@ export default function App() {
       </section>
 
       {/* Lead Capture Form - UPDATED WITH WEB3FORMS */}
-      <section id="contact" className="py-32 px-4">
-        <div className="max-w-6xl mx-auto bg-slate-950 rounded-[4rem] p-12 md:p-24 relative overflow-hidden">
+      <section id="contact" className="py-24 md:py-32 px-4">
+        <div className="max-w-6xl mx-auto bg-slate-950 rounded-[3rem] md:rounded-[4rem] p-8 md:p-24 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
           
           <div className="grid lg:grid-cols-2 gap-20 items-center relative z-10">
             <div>
-              <h2 className="text-5xl md:text-6xl font-bold text-white mb-8 tracking-tighter leading-none">Elevate your practice <span className="text-slate-600">today.</span></h2>
+              <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tighter leading-none">Elevate your practice <span className="text-slate-600">today.</span></h2>
               <p className="text-slate-400 text-lg mb-12">
                 Join our network of elite physiotherapy clinics. Leave your details to receive our professional catalogue and a complimentary sample pack.
               </p>
@@ -487,7 +485,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-white p-10 rounded-[3rem] shadow-2xl shadow-black/50">
+            <div className="bg-white p-8 md:p-10 rounded-[3rem] shadow-2xl shadow-black/50">
               {/* CONTACT FORM START */}
               <form 
                 className="space-y-4" 
