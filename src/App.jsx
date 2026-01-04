@@ -22,11 +22,13 @@ const heroSlides = [
   {
     id: 1,
     name: "Pure Ice",
-    // UPDATED: Using the direct link for your new photo
+    // DIRECT link (ends in .png)
     image: "https://i.imgur.com/sLLnGFB.png", 
     icon: null, 
     quote: "The cooling effect is sustained for over 50 minutes from a single application, my clients love it. ~Dr. Ralph J. Ghosn - Physiotherapist",
-    color: "bg-white"
+    color: "bg-white",
+    // This makes the bottle 25% bigger to fix the "tiny/goofy" look
+    scale: "scale-125" 
   },
   {
     id: 2,
@@ -34,7 +36,8 @@ const heroSlides = [
     image: null, 
     icon: <Sparkles className="w-12 h-12 md:w-16 md:h-16 text-purple-600 mb-4 md:mb-6" />,
     quote: "Hydrates without sticky residue. Perfect for Swedish massage.",
-    color: "bg-purple-50"
+    color: "bg-purple-50",
+    scale: "scale-100"
   }
 ];
 
@@ -203,7 +206,7 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Hero Section - RESTRUCTURED LAYOUT */}
+      {/* Hero Section */}
       <header className="relative min-h-screen flex items-center pt-28 pb-12 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-50 rounded-full blur-[120px] opacity-60" />
@@ -266,10 +269,10 @@ export default function App() {
                    {/* The Card Content */}
                    <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-6 text-center shadow-2xl`}>
                       
-                      {/* Logic: Show Image if it exists, otherwise show Icon */}
-                      <div className="flex-1 flex items-center justify-center w-full">
+                      {/* IMAGE AREA - NOW WITH SCALING SUPPORT */}
+                      <div className="flex-1 flex items-center justify-center w-full relative z-10">
                         {slide.image ? (
-                          <div className="w-48 h-48 md:w-64 md:h-64 relative flex items-center justify-center">
+                          <div className={`w-48 h-48 md:w-64 md:h-64 relative flex items-center justify-center transition-transform duration-700 ${slide.scale}`}>
                             <img 
                               src={slide.image} 
                               alt={slide.name} 
@@ -281,7 +284,7 @@ export default function App() {
                         )}
                       </div>
 
-                      <div className="pb-8">
+                      <div className="pb-8 relative z-20">
                         <h3 className="text-2xl font-bold mb-3">{slide.name}</h3>
                         <div className="flex items-center space-x-1 mb-4 justify-center">
                           {[1,2,3,4,5].map(i => <Sparkles key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
@@ -297,7 +300,7 @@ export default function App() {
               </div>
             ))}
             
-            {/* Dots - Larger touch area for mobile */}
+            {/* Dots */}
             <div className="absolute -bottom-12 left-0 right-0 flex justify-center space-x-4 z-20">
               {heroSlides.map((_, index) => (
                 <button 
@@ -317,7 +320,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* Social Proof Bar - SLIDING */}
+      {/* Social Proof Bar */}
       <section className="bg-slate-50 py-12 border-y border-slate-100 overflow-hidden relative">
         <style>{`
           @keyframes scroll {
@@ -494,7 +497,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* Lead Capture Form - UPDATED WITH WEB3FORMS */}
+      {/* Lead Capture Form */}
       <section id="contact" className="py-24 md:py-32 px-4">
         <div className="max-w-6xl mx-auto bg-slate-950 rounded-[3rem] md:rounded-[4rem] p-8 md:p-24 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
@@ -529,75 +532,43 @@ export default function App() {
             </div>
 
             <div className="bg-white p-8 md:p-10 rounded-[3rem] shadow-2xl shadow-black/50">
-              {/* CONTACT FORM START */}
               <form 
                 className="space-y-4" 
                 action="https://api.web3forms.com/submit" 
                 method="POST"
               >
-                {/* Your Access Key */}
                 <input type="hidden" name="access_key" value="f23546d0-7c35-4655-adee-b6af9841d1cd" />
                 <input type="hidden" name="subject" value="New Wholesale Inquiry - Therapeutic Oils" />
-                
-                {/* The Bot Trap */}
                 <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Your Name</label>
-                    <input 
-                      type="text" 
-                      name="name" 
-                      required 
-                      className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" 
-                      placeholder="John Doe" 
-                    />
+                    <input type="text" name="name" required className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" placeholder="John Doe" />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Clinic Name</label>
-                    <input 
-                      type="text" 
-                      name="clinic" 
-                      className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" 
-                      placeholder="Elite Physio" 
-                    />
+                    <input type="text" name="clinic" className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" placeholder="Elite Physio" />
                   </div>
                 </div>
                 <div className="space-y-1">
                   <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Work Email</label>
-                  <input 
-                    type="email" 
-                    name="email" 
-                    required 
-                    className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" 
-                    placeholder="john@clinic.com" 
-                  />
+                  <input type="email" name="email" required className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" placeholder="john@clinic.com" />
                 </div>
                 <div className="space-y-1">
                   <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Message</label>
-                  <textarea 
-                    rows="3" 
-                    name="message" 
-                    required 
-                    className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm resize-none" 
-                    placeholder="How can we help?" 
-                  />
+                  <textarea rows="3" name="message" required className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm resize-none" placeholder="How can we help?" />
                 </div>
-                <button 
-                  type="submit" 
-                  className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 mt-4"
-                >
+                <button type="submit" className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 mt-4">
                   Request B2B Pricing
                 </button>
                 <p className="text-[10px] text-center text-slate-400 mt-4">Sample requests are subject to availability. Regional delivery only.</p>
               </form>
-              {/* CONTACT FORM END */}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="py-20 border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center mb-12">
