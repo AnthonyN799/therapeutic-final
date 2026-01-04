@@ -16,7 +16,9 @@ import {
   MessageSquare,
   Activity,
   FileText,
-  MessageCircle // Added for the WhatsApp button
+  MessageCircle,
+  Rabbit,   // NEW: For Cruelty Free
+  Feather   // NEW: For Silicone Free
 } from 'lucide-react';
 
 // --- DATA ---
@@ -435,6 +437,48 @@ export default function App() {
              </div>
              <h4 className="text-xl font-bold mb-4">Cosmetic Compliance</h4>
              <p className="text-slate-500 leading-relaxed">Pure botanical extracts that meet strict safety standards, ensuring a premium experience for your clients.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW SECTION: TRUST BADGES (Clean Formula Promise) */}
+      <section className="border-t border-slate-100 bg-slate-50/50">
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            {/* 1. Cruelty Free */}
+            <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+              <div className="p-2 bg-pink-50 text-pink-500 rounded-full">
+                <Rabbit className="w-6 h-6" />
+              </div>
+              <div className="text-left">
+                <p className="text-xs font-bold uppercase text-slate-400 tracking-wider">Compassionate</p>
+                <p className="font-bold text-slate-900">Cruelty Free</p>
+              </div>
+            </div>
+
+            {/* 2. Paraben Free */}
+            <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+              <div className="p-2 bg-emerald-50 text-emerald-500 rounded-full">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <div className="text-left">
+                <p className="text-xs font-bold uppercase text-slate-400 tracking-wider">Clean Label</p>
+                <p className="font-bold text-slate-900">Paraben Free</p>
+              </div>
+            </div>
+
+            {/* 3. Silicone Free */}
+            <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+              <div className="p-2 bg-blue-50 text-blue-500 rounded-full">
+                <Feather className="w-6 h-6" />
+              </div>
+              <div className="text-left">
+                <p className="text-xs font-bold uppercase text-slate-400 tracking-wider">Breathable</p>
+                <p className="font-bold text-slate-900">Silicone Free</p>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
