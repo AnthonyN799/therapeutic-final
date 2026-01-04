@@ -151,7 +151,7 @@ const faqs = [
 export default function App() {
   const [selectedHeroSlide, setSelectedHeroSlide] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [showPrivacy, setShowPrivacy] = useState(false); // NEW STATE FOR PRIVACY MODAL
+  const [showPrivacy, setShowPrivacy] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -722,8 +722,6 @@ export default function App() {
             </div>
             <div className="flex space-x-12 text-[11px] font-bold uppercase tracking-widest text-slate-400">
               <button onClick={() => setShowPrivacy(true)} className="hover:text-slate-900 transition-colors">Privacy Policy</button>
-              <a href="#" className="hover:text-slate-900 transition-colors">Safety Data</a>
-              <a href="#" className="hover:text-slate-900 transition-colors">Compliance</a>
             </div>
           </div>
           <div className="text-center text-slate-400 text-xs">
