@@ -17,8 +17,7 @@ import {
   Activity,
   FileText,
   MessageCircle,
-  Rabbit,   // NEW: For Cruelty Free
-  Feather   // NEW: For Silicone Free
+  Heart // CHANGED: Replaced Rabbit with Heart (Safe Icon)
 } from 'lucide-react';
 
 // --- DATA ---
@@ -446,10 +445,10 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            {/* 1. Cruelty Free */}
+            {/* 1. Cruelty Free - Uses HEART (Safe Icon) */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-pink-50 text-pink-500 rounded-full">
-                <Rabbit className="w-6 h-6" />
+                <Heart className="w-6 h-6" />
               </div>
               <div className="text-left">
                 <p className="text-xs font-bold uppercase text-slate-400 tracking-wider">Compassionate</p>
@@ -457,7 +456,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* 2. Paraben Free */}
+            {/* 2. Paraben Free - Uses SHIELDCHECK (Safe Icon) */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-emerald-50 text-emerald-500 rounded-full">
                 <ShieldCheck className="w-6 h-6" />
@@ -468,10 +467,10 @@ export default function App() {
               </div>
             </div>
 
-            {/* 3. Silicone Free */}
+            {/* 3. Silicone Free - Uses WIND (Safe Icon) */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-blue-50 text-blue-500 rounded-full">
-                <Feather className="w-6 h-6" />
+                <Wind className="w-6 h-6" />
               </div>
               <div className="text-left">
                 <p className="text-xs font-bold uppercase text-slate-400 tracking-wider">Breathable</p>
