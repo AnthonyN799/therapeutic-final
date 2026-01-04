@@ -17,14 +17,14 @@ import {
   Activity
 } from 'lucide-react';
 
-// --- DATA: MOVED OUTSIDE FOR STABILITY ---
+// --- DATA ---
 const heroSlides = [
   {
     id: 1,
     name: "Pure Ice",
     image: "https://i.imgur.com/XDgCNMN.jpeg", 
     icon: null, 
-    quote: "The glide and absorption are perfectly balanced for deep tissue work. My clients love the scent.",
+    quote: "The glide/absorption balance is perfect for deep tissue work.",
     color: "bg-white"
   },
   {
@@ -32,7 +32,7 @@ const heroSlides = [
     name: "Massage Lotion",
     image: null, 
     icon: <Sparkles className="w-12 h-12 md:w-16 md:h-16 text-purple-600 mb-4 md:mb-6" />,
-    quote: "Finally a lotion that hydrates without leaving that sticky residue. Perfect for my Swedish massage clients.",
+    quote: "Hydrates without sticky residue. Perfect for Swedish massage.",
     color: "bg-purple-50"
   }
 ];
@@ -150,6 +150,32 @@ export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // --- SWIPE LOGIC ---
+  const [touchStart, setTouchStart] = useState(null)
+  const [touchEnd, setTouchEnd] = useState(null)
+  const minSwipeDistance = 50 
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null) 
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX)
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+    
+    if (isLeftSwipe) {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
+    }
+    if (isRightSwipe) {
+      setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)
+    }
+  }
+
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
@@ -176,35 +202,37 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <header className="relative min-h-screen flex items-center pt-24 md:pt-20 overflow-hidden pb-12">
+      {/* Hero Section - RESTRUCTURED LAYOUT */}
+      <header className="relative min-h-screen flex items-center pt-28 pb-12 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-50 rounded-full blur-[120px] opacity-60" />
           <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-50 rounded-full blur-[120px] opacity-60" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <div className="order-2 lg:order-1">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-slate-100 rounded-full text-slate-600 text-[11px] font-bold uppercase tracking-widest mb-6">
+        <div className="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+          
+          {/* LEFT COLUMN: Text Content */}
+          <div className="flex flex-col justify-center">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-slate-100 rounded-full text-slate-600 text-[11px] font-bold uppercase tracking-widest mb-6 w-fit">
               <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
               <span>Professional Physiotherapy Solutions</span>
             </div>
-            <h1 className="text-5xl md:text-8xl font-black text-slate-900 leading-[0.95] mb-6 md:mb-8 tracking-tighter">
+            <h1 className="text-5xl md:text-8xl font-black text-slate-900 leading-[0.95] mb-6 tracking-tighter">
               Performance <br />Through <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-500 italic font-light">Botanicals.</span>
             </h1>
-            <p className="text-lg md:text-xl text-slate-600 leading-relaxed mb-8 md:mb-10 max-w-lg">
+            <p className="text-lg md:text-xl text-slate-600 leading-relaxed mb-8 max-w-lg">
               The professional choice for manual therapy. Our high-performance gels and oils bridge the gap between clinical efficacy and natural skin care.
             </p>
             <div className="flex flex-wrap gap-4">
-              <a href="#products" className="px-8 py-5 bg-slate-900 text-white rounded-2xl font-bold flex items-center hover:shadow-2xl hover:bg-slate-800 transition-all group">
+              <a href="#products" className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center hover:shadow-2xl hover:bg-slate-800 transition-all group">
                 Browse Solutions <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
-              <a href="#contact" className="px-8 py-5 border border-slate-200 rounded-2xl font-bold text-slate-700 hover:bg-slate-50 transition-all">
+              <a href="#contact" className="px-8 py-4 border border-slate-200 rounded-2xl font-bold text-slate-700 hover:bg-slate-50 transition-all">
                 Request Samples
               </a>
             </div>
             
-            <div className="mt-12 flex items-center space-x-8">
+            <div className="mt-10 flex items-center space-x-6">
                <div className="flex -space-x-3">
                  {[1,2,3,4].map(i => (
                    <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[10px] font-bold overflow-hidden">
@@ -216,43 +244,52 @@ export default function App() {
             </div>
           </div>
           
-          {/* SLIDING HERO CARD - MOBILE OPTIMIZED */}
-          <div className="order-1 lg:order-2 relative h-[550px] md:h-[500px] w-full max-w-md mx-auto mt-8 lg:mt-0">
+          {/* RIGHT COLUMN: Swipable Card */}
+          <div 
+            className="relative h-[500px] w-full max-w-md mx-auto mt-8 lg:mt-0"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
             {heroSlides.map((slide, index) => (
               <div 
                 key={slide.id}
-                className={`absolute inset-0 transition-all duration-1000 ease-in-out transform ${
-                  index === currentSlide ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
+                className={`absolute inset-0 transition-all duration-700 ease-in-out transform ${
+                  index === currentSlide ? 'opacity-100 translate-x-0 z-10' : 'opacity-0 translate-x-8 z-0'
                 }`}
               >
-                <div className="relative aspect-square">
+                <div className="relative w-full h-full">
                    {/* Background Blob */}
-                   <div className={`absolute inset-0 bg-gradient-to-tr from-slate-200 to-slate-50 rounded-[3rem] md:rounded-[4rem] rotate-6 transform transition-transform duration-700 ${index === currentSlide ? 'rotate-6' : 'rotate-0'}`} />
+                   <div className={`absolute inset-0 bg-gradient-to-tr from-slate-200 to-slate-50 rounded-[3rem] rotate-6 transform transition-transform duration-700 ${index === currentSlide ? 'rotate-6' : 'rotate-0'}`} />
                    
                    {/* The Card Content */}
-                   <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[3rem] md:rounded-[4rem] flex flex-col items-center justify-center p-6 md:p-8 text-center shadow-2xl overflow-hidden`}>
+                   <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-6 text-center shadow-2xl`}>
                       
                       {/* Logic: Show Image if it exists, otherwise show Icon */}
-                      {slide.image ? (
-                        <div className="w-48 h-48 md:w-64 md:h-64 mb-4 relative flex items-center justify-center">
-                          <img 
-                            src={slide.image} 
-                            alt={slide.name} 
-                            className="w-full h-full object-contain drop-shadow-2xl" 
-                          />
-                        </div>
-                      ) : (
-                        <div className="mb-4">{slide.icon}</div>
-                      )}
-
-                      <h3 className="text-2xl md:text-3xl font-bold mb-4">{slide.name}</h3>
-                      <div className="flex items-center space-x-1 mb-4 md:mb-6 justify-center">
-                        {[1,2,3,4,5].map(i => <Sparkles key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
+                      <div className="flex-1 flex items-center justify-center w-full">
+                        {slide.image ? (
+                          <div className="w-48 h-48 md:w-64 md:h-64 relative flex items-center justify-center">
+                            <img 
+                              src={slide.image} 
+                              alt={slide.name} 
+                              className="w-full h-full object-contain drop-shadow-2xl" 
+                            />
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center">{slide.icon}</div>
+                        )}
                       </div>
-                      <p className="text-slate-500 text-xs md:text-sm italic px-2">"{slide.quote}"</p>
-                      
-                      <div className="mt-6 md:mt-8 pt-6 md:pt-8 border-t border-slate-100 w-full">
-                        <span className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Featured Product</span>
+
+                      <div className="pb-8">
+                        <h3 className="text-2xl font-bold mb-3">{slide.name}</h3>
+                        <div className="flex items-center space-x-1 mb-4 justify-center">
+                          {[1,2,3,4,5].map(i => <Sparkles key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
+                        </div>
+                        <p className="text-slate-500 text-sm italic px-4 leading-relaxed">"{slide.quote}"</p>
+                        
+                        <div className="mt-6 pt-6 border-t border-slate-100 w-full">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Featured Product</span>
+                        </div>
                       </div>
                    </div>
                 </div>
@@ -260,7 +297,7 @@ export default function App() {
             ))}
             
             {/* Dots - Larger touch area for mobile */}
-            <div className="absolute -bottom-12 left-0 right-0 flex justify-center space-x-4">
+            <div className="absolute -bottom-12 left-0 right-0 flex justify-center space-x-4 z-20">
               {heroSlides.map((_, index) => (
                 <button 
                   key={index}
@@ -269,6 +306,11 @@ export default function App() {
                   aria-label={`Go to slide ${index + 1}`}
                 />
               ))}
+            </div>
+            
+            {/* Hint for mobile users */}
+            <div className="absolute bottom-4 right-8 lg:hidden animate-pulse">
+               <ArrowRight className="w-5 h-5 text-slate-300" />
             </div>
           </div>
         </div>
