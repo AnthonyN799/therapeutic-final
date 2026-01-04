@@ -22,8 +22,7 @@ const heroSlides = [
   {
     id: 1,
     name: "Pure Ice",
-    // CURRENT WORKING LINK (White Background)
-    // TODO: Paste your new transparent link here from remove.bg when you have it!
+    // Keep using the direct link that works
     image: "https://i.imgur.com/sLLnGFB.png", 
     icon: null, 
     quote: "The cooling effect is sustained for over 50 minutes from a single application, my clients love it. ~Dr. Ralph J. Ghosn - Physiotherapist",
@@ -148,6 +147,8 @@ const faqs = [
 ];
 
 export default function App() {
+  // New state for holding the clicked hero image details
+  const [selectedHeroSlide, setSelectedHeroSlide] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -181,8 +182,17 @@ export default function App() {
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    // Lock body scroll when a modal is open
+    if (selectedProduct || selectedHeroSlide) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+        window.removeEventListener('scroll', handleScroll);
+        document.body.style.overflow = 'unset';
+    }
+  }, [selectedProduct, selectedHeroSlide]);
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 scroll-smooth">
@@ -267,23 +277,30 @@ export default function App() {
                    {/* The Card Content */}
                    <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-6 text-center shadow-2xl`}>
                       
-                      {/* IMAGE AREA - Styling fixed to handle White Background gracefully */}
+                      {/* IMAGE AREA - UPDATED: Circular, smaller frame, clickable */}
                       <div className="flex-1 flex items-center justify-center w-full relative z-10 py-4">
                         {slide.image ? (
-                          <div className="w-full h-full relative flex items-center justify-center p-4">
+                          // Circular Frame Container with click handler
+                          <div 
+                            className="w-56 h-56 rounded-full border-[6px] border-white bg-white shadow-xl relative flex items-center justify-center overflow-hidden cursor-pointer group hover:scale-105 transition-transform duration-300"
+                            onClick={() => setSelectedHeroSlide(slide)}
+                          >
                             <img 
                               src={slide.image} 
                               alt={slide.name} 
-                              // I removed the heavy drop-shadow so the white box isn't as obvious
-                              className="w-full h-full object-contain" 
+                              className="w-full h-full object-contain p-2 group-hover:opacity-90 transition-opacity" 
                             />
+                            {/* Expand Icon overlay on hover */}
+                            <div className="absolute inset-0 bg-slate-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                               <Maximize2 className="text-white w-8 h-8 drop-shadow-lg"/>
+                            </div>
                           </div>
                         ) : (
                           <div className="flex items-center justify-center">{slide.icon}</div>
                         )}
                       </div>
 
-                      <div className="pb-6 relative z-20">
+                      <div className="pb-6 relative z-20 pointer-events-none">
                         <h3 className="text-2xl font-bold mb-3">{slide.name}</h3>
                         <div className="flex items-center space-x-1 mb-4 justify-center">
                           {[1,2,3,4,5].map(i => <Sparkles key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
@@ -318,6 +335,48 @@ export default function App() {
           </div>
         </div>
       </header>
+
+      {/* NEW: Hero Slide Reveal Modal */}
+      {selectedHeroSlide && (
+        <div 
+          className="fixed inset-0 z-[250] flex items-center justify-center p-4 bg-slate-950/95 backdrop-blur-md animate-in fade-in duration-300 cursor-zoom-out"
+          onClick={() => setSelectedHeroSlide(null)}
+        >
+          <div 
+            className="relative w-full max-w-2xl bg-white rounded-[3rem] p-8 md:p-12 shadow-2xl animate-in zoom-in-95 duration-300 cursor-default"
+            onClick={e => e.stopPropagation()} // Prevent closing when clicking inside the box
+          >
+            <button 
+              onClick={() => setSelectedHeroSlide(null)}
+              className="absolute top-6 right-6 p-3 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors z-10"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="flex flex-col items-center text-center">
+                {/* Full Size Image */}
+                {selectedHeroSlide.image && (
+                <div className="w-full h-80 md:h-96 relative flex items-center justify-center mb-8">
+                    <img 
+                        src={selectedHeroSlide.image} 
+                        alt={selectedHeroSlide.name} 
+                        className="w-full h-full object-contain drop-shadow-2xl" 
+                    />
+                </div>
+                )}
+                
+                {/* Text Content */}
+                <h3 className="text-3xl md:text-4xl font-bold mb-4">{selectedHeroSlide.name}</h3>
+                <div className="flex items-center space-x-1 mb-6 justify-center">
+                {[1,2,3,4,5].map(i => <Sparkles key={i} className="w-5 h-5 text-amber-400 fill-amber-400" />)}
+                </div>
+                <blockquote className="text-slate-600 text-xl italic leading-relaxed max-w-lg">
+                "{selectedHeroSlide.quote}"
+                </blockquote>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Social Proof Bar */}
       <section className="bg-slate-50 py-12 border-y border-slate-100 overflow-hidden relative">
