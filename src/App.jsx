@@ -17,6 +17,26 @@ import {
   Activity
 } from 'lucide-react';
 
+// --- DATA: MOVED OUTSIDE FOR STABILITY ---
+const heroSlides = [
+  {
+    id: 1,
+    name: "Pure Ice",
+    image: "https://i.imgur.com/XDgCNMN.jpeg", 
+    icon: null, 
+    quote: "The glide and absorption are perfectly balanced for deep tissue work. My clients love the scent.",
+    color: "bg-white"
+  },
+  {
+    id: 2,
+    name: "Massage Lotion",
+    image: null, 
+    icon: <Sparkles className="w-16 h-16 text-purple-600 mb-6" />,
+    quote: "Finally a lotion that hydrates without leaving that sticky residue. Perfect for my Swedish massage clients.",
+    color: "bg-purple-50"
+  }
+];
+
 const products = [
   {
     id: 1,
@@ -128,6 +148,7 @@ const faqs = [
 export default function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -135,36 +156,8 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // --- CAROUSEL LOGIC START ---
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  const heroSlides = [
-    {
-      id: 1,
-      name: "Pure Ice",
-      image: "https://i.imgur.com/XDgCNMN.jpeg", 
-      icon: null, 
-      quote: "The glide and absorption are perfectly balanced for deep tissue work. My clients love the scent.",
-      color: "bg-white"
-    },
-    {
-      id: 2,
-      name: "Massage Lotion",
-      image: null, 
-      icon: <Sparkles className="w-16 h-16 text-purple-600 mb-6" />,
-      quote: "Finally a lotion that hydrates without leaving that sticky residue. Perfect for my Swedish massage clients.",
-      color: "bg-purple-50"
-    }
-  ];
-
-  // Auto-slide every 5 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-  // --- CAROUSEL LOGIC END ---
+  // NOTE: I deleted the "useEffect" timer here. 
+  // The Carousel will now only move when you click the dots.
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 scroll-smooth">
@@ -283,9 +276,8 @@ export default function App() {
         </div>
       </header>
 
-      {/* Social Proof Bar - NOW SLIDING */}
+      {/* Social Proof Bar - SLIDING */}
       <section className="bg-slate-50 py-12 border-y border-slate-100 overflow-hidden relative">
-        {/* This style tag defines the sliding animation right here */}
         <style>{`
           @keyframes scroll {
             0% { transform: translateX(0); }
@@ -296,9 +288,7 @@ export default function App() {
           }
         `}</style>
         
-        {/* The Sliding Container */}
         <div className="flex w-max animate-scroll hover:[animation-play-state:paused]">
-          {/* We repeat the list twice to create the infinite loop effect */}
           {[1, 2].map((i) => (
             <div key={i} className="flex space-x-24 px-12 shrink-0">
               {["PHYSIOTHERAPY CENTERS", "ELITE RECOVERY", "SPORTS CENTERS", "CLINICS AND MORE", "WELLNESS LABS", "MANUAL THERAPY"].map((name, index) => (
@@ -508,7 +498,7 @@ export default function App() {
                 <input type="hidden" name="access_key" value="f23546d0-7c35-4655-adee-b6af9841d1cd" />
                 <input type="hidden" name="subject" value="New Wholesale Inquiry - Therapeutic Oils" />
                 
-                {/* The Bot Trap - Humans won't see this, but bots will fill it and get blocked */}
+                {/* The Bot Trap */}
                 <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
                 
                 <div className="grid grid-cols-2 gap-4">
