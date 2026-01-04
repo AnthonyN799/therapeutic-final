@@ -15,7 +15,8 @@ import {
   ArrowRight,
   MessageSquare,
   Activity,
-  FileText
+  FileText,
+  MessageCircle // Added for the WhatsApp button
 } from 'lucide-react';
 
 // --- DATA ---
@@ -23,7 +24,6 @@ const heroSlides = [
   {
     id: 1,
     name: "Pure Ice",
-    // VALID LINK: Using your uploaded transparent image
     image: "https://i.imgur.com/sLLnGFB.png", 
     icon: null, 
     quote: "The cooling effect is sustained for over 50 minutes from a single application, my clients love it. ~Dr. Ralph J. Ghosn - Physiotherapist",
@@ -32,7 +32,6 @@ const heroSlides = [
   {
     id: 2,
     name: "Pure Ice",
-    // VALID LINK: Using the same image for the second review
     image: "https://i.imgur.com/sLLnGFB.png", 
     icon: null, 
     quote: "It provides exceptional relief. Most of my patients are asking to take tubes home for post-session recovery. ~Marie-Joe Eid - Physiotherapist",
@@ -729,6 +728,17 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Floating WhatsApp Button */}
+      <a
+        href="https://wa.me/9613203567"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-[90] p-4 bg-[#25D366] text-white rounded-full shadow-2xl hover:bg-green-600 transition-all hover:scale-110 flex items-center justify-center group"
+        aria-label="Chat on WhatsApp"
+      >
+        <MessageCircle className="w-8 h-8 fill-current" />
+      </a>
     </div>
   );
 }
