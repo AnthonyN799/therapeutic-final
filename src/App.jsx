@@ -22,9 +22,9 @@ const heroSlides = [
   {
     id: 1,
     name: "Pure Ice",
-    // THE MAGIC: I created a transparent background version of your image.
-    // This is what makes it look smooth and integrated into the card.
-    image: "https://i.imgur.com/8Q4Nq5c.png", 
+    // CURRENT WORKING LINK (White Background)
+    // TODO: Paste your new transparent link here from remove.bg when you have it!
+    image: "https://i.imgur.com/sLLnGFB.png", 
     icon: null, 
     quote: "The cooling effect is sustained for over 50 minutes from a single application, my clients love it. ~Dr. Ralph J. Ghosn - Physiotherapist",
     color: "bg-white"
@@ -267,16 +267,15 @@ export default function App() {
                    {/* The Card Content */}
                    <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-6 text-center shadow-2xl`}>
                       
-                      {/* IMAGE AREA - FIXED TO BE SMOOTH AND CONTAINED */}
+                      {/* IMAGE AREA - Styling fixed to handle White Background gracefully */}
                       <div className="flex-1 flex items-center justify-center w-full relative z-10 py-4">
                         {slide.image ? (
-                          // I removed the zoom hack and added padding (p-4) so it sits perfectly inside the frame.
-                          // The drop-shadow-xl now looks correct because the image is transparent.
                           <div className="w-full h-full relative flex items-center justify-center p-4">
                             <img 
                               src={slide.image} 
                               alt={slide.name} 
-                              className="w-full h-full object-contain drop-shadow-xl" 
+                              // I removed the heavy drop-shadow so the white box isn't as obvious
+                              className="w-full h-full object-contain" 
                             />
                           </div>
                         ) : (
