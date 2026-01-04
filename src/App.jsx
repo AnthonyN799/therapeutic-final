@@ -22,19 +22,21 @@ const heroSlides = [
   {
     id: 1,
     name: "Pure Ice",
-    // Keep using the direct link that works
-    image: "https://i.imgur.com/sLLnGFB.png", 
+    // Transparent Image 1
+    image: "https://i.imgur.com/8Q4Nq5c.png", 
     icon: null, 
     quote: "The cooling effect is sustained for over 50 minutes from a single application, my clients love it. ~Dr. Ralph J. Ghosn - Physiotherapist",
     color: "bg-white"
   },
   {
     id: 2,
-    name: "Massage Lotion",
-    image: null, 
-    icon: <Sparkles className="w-12 h-12 md:w-16 md:h-16 text-purple-600 mb-4 md:mb-6" />,
-    quote: "Hydrates without sticky residue. Perfect for Swedish massage.",
-    color: "bg-purple-50"
+    name: "Pure Ice",
+    // Transparent Image 2 (Same bottle, different review)
+    image: "https://i.imgur.com/8Q4Nq5c.png", 
+    icon: null, 
+    // Polished grammar for the review:
+    quote: "It provides exceptional relief. Most of my patients are asking to take tubes home for post-session recovery. ~Marie-Joe Eid - Physiotherapist",
+    color: "bg-blue-50" // Changed background slightly to distinguish the slide
   }
 ];
 
@@ -147,7 +149,6 @@ const faqs = [
 ];
 
 export default function App() {
-  // New state for holding the clicked hero image details
   const [selectedHeroSlide, setSelectedHeroSlide] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -182,7 +183,7 @@ export default function App() {
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
-    // Lock body scroll when a modal is open
+    
     if (selectedProduct || selectedHeroSlide) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -277,7 +278,7 @@ export default function App() {
                    {/* The Card Content */}
                    <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-6 text-center shadow-2xl`}>
                       
-                      {/* IMAGE AREA - UPDATED: Circular, smaller frame, clickable */}
+                      {/* IMAGE AREA - Circular, smaller frame, clickable */}
                       <div className="flex-1 flex items-center justify-center w-full relative z-10 py-4">
                         {slide.image ? (
                           // Circular Frame Container with click handler
@@ -555,7 +556,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* Lead Capture Form */}
+      {/* Lead Capture Form - UPDATED WITH WEB3FORMS */}
       <section id="contact" className="py-24 md:py-32 px-4">
         <div className="max-w-6xl mx-auto bg-slate-950 rounded-[3rem] md:rounded-[4rem] p-8 md:p-24 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
@@ -590,43 +591,75 @@ export default function App() {
             </div>
 
             <div className="bg-white p-8 md:p-10 rounded-[3rem] shadow-2xl shadow-black/50">
+              {/* CONTACT FORM START */}
               <form 
                 className="space-y-4" 
                 action="https://api.web3forms.com/submit" 
                 method="POST"
               >
+                {/* Your Access Key */}
                 <input type="hidden" name="access_key" value="f23546d0-7c35-4655-adee-b6af9841d1cd" />
                 <input type="hidden" name="subject" value="New Wholesale Inquiry - Therapeutic Oils" />
+                
+                {/* The Bot Trap */}
                 <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Your Name</label>
-                    <input type="text" name="name" required className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" placeholder="John Doe" />
+                    <input 
+                      type="text" 
+                      name="name" 
+                      required 
+                      className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" 
+                      placeholder="John Doe" 
+                    />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Clinic Name</label>
-                    <input type="text" name="clinic" className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" placeholder="Elite Physio" />
+                    <input 
+                      type="text" 
+                      name="clinic" 
+                      className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" 
+                      placeholder="Elite Physio" 
+                    />
                   </div>
                 </div>
                 <div className="space-y-1">
                   <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Work Email</label>
-                  <input type="email" name="email" required className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" placeholder="john@clinic.com" />
+                  <input 
+                    type="email" 
+                    name="email" 
+                    required 
+                    className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" 
+                    placeholder="john@clinic.com" 
+                  />
                 </div>
                 <div className="space-y-1">
                   <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Message</label>
-                  <textarea rows="3" name="message" required className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm resize-none" placeholder="How can we help?" />
+                  <textarea 
+                    rows="3" 
+                    name="message" 
+                    required 
+                    className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm resize-none" 
+                    placeholder="How can we help?" 
+                  />
                 </div>
-                <button type="submit" className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 mt-4">
+                <button 
+                  type="submit" 
+                  className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 mt-4"
+                >
                   Request B2B Pricing
                 </button>
                 <p className="text-[10px] text-center text-slate-400 mt-4">Sample requests are subject to availability. Regional delivery only.</p>
               </form>
+              {/* CONTACT FORM END */}
             </div>
           </div>
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="py-20 border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center mb-12">
