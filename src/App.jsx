@@ -22,16 +22,16 @@ const heroSlides = [
   {
     id: 1,
     name: "Pure Ice",
-    image: "https://i.imgur.com/XDgCNMN.jpeg", 
+    image: "https://imgur.com/a/73eTMDp", 
     icon: null, 
-    quote: "The glide/absorption balance is perfect for deep tissue work.",
+    quote: "The cooling effect is sustained for over 50 minutes from a single application, my clients love it." ~Dr. Ralph J. Ghosn - Physiotherapist,
     color: "bg-white"
   },
   {
     id: 2,
-    name: "Massage Lotion",
-    image: null, 
-    icon: <Sparkles className="w-12 h-12 md:w-16 md:h-16 text-purple-600 mb-4 md:mb-6" />,
+    name: "Pure Ice",
+    image: "https://imgur.com/a/73eTMDp", 
+    icon: null,
     quote: "Hydrates without sticky residue. Perfect for Swedish massage.",
     color: "bg-purple-50"
   }
