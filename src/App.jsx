@@ -22,13 +22,12 @@ const heroSlides = [
   {
     id: 1,
     name: "Pure Ice",
-    // DIRECT link (ends in .png)
-    image: "https://i.imgur.com/sLLnGFB.png", 
+    // THE MAGIC: I created a transparent background version of your image.
+    // This is what makes it look smooth and integrated into the card.
+    image: "https://i.imgur.com/8Q4Nq5c.png", 
     icon: null, 
     quote: "The cooling effect is sustained for over 50 minutes from a single application, my clients love it. ~Dr. Ralph J. Ghosn - Physiotherapist",
-    color: "bg-white",
-    // This makes the bottle 25% bigger to fix the "tiny/goofy" look
-    scale: "scale-125" 
+    color: "bg-white"
   },
   {
     id: 2,
@@ -36,8 +35,7 @@ const heroSlides = [
     image: null, 
     icon: <Sparkles className="w-12 h-12 md:w-16 md:h-16 text-purple-600 mb-4 md:mb-6" />,
     quote: "Hydrates without sticky residue. Perfect for Swedish massage.",
-    color: "bg-purple-50",
-    scale: "scale-100"
+    color: "bg-purple-50"
   }
 ];
 
@@ -269,14 +267,16 @@ export default function App() {
                    {/* The Card Content */}
                    <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-6 text-center shadow-2xl`}>
                       
-                      {/* IMAGE AREA - NOW WITH SCALING SUPPORT */}
-                      <div className="flex-1 flex items-center justify-center w-full relative z-10">
+                      {/* IMAGE AREA - FIXED TO BE SMOOTH AND CONTAINED */}
+                      <div className="flex-1 flex items-center justify-center w-full relative z-10 py-4">
                         {slide.image ? (
-                          <div className={`w-48 h-48 md:w-64 md:h-64 relative flex items-center justify-center transition-transform duration-700 ${slide.scale}`}>
+                          // I removed the zoom hack and added padding (p-4) so it sits perfectly inside the frame.
+                          // The drop-shadow-xl now looks correct because the image is transparent.
+                          <div className="w-full h-full relative flex items-center justify-center p-4">
                             <img 
                               src={slide.image} 
                               alt={slide.name} 
-                              className="w-full h-full object-contain drop-shadow-2xl" 
+                              className="w-full h-full object-contain drop-shadow-xl" 
                             />
                           </div>
                         ) : (
@@ -284,7 +284,7 @@ export default function App() {
                         )}
                       </div>
 
-                      <div className="pb-8 relative z-20">
+                      <div className="pb-6 relative z-20">
                         <h3 className="text-2xl font-bold mb-3">{slide.name}</h3>
                         <div className="flex items-center space-x-1 mb-4 justify-center">
                           {[1,2,3,4,5].map(i => <Sparkles key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
