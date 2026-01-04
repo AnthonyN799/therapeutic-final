@@ -22,8 +22,8 @@ const heroSlides = [
   {
     id: 1,
     name: "Pure Ice",
-    // FIXED: Changed Album link to Direct Image link
-    image: "https://i.imgur.com/73eTMDp.jpeg", 
+    // UPDATED: Using the direct link for your new photo
+    image: "https://i.imgur.com/sLLnGFB.png", 
     icon: null, 
     quote: "The cooling effect is sustained for over 50 minutes from a single application, my clients love it. ~Dr. Ralph J. Ghosn - Physiotherapist",
     color: "bg-white"
@@ -31,7 +31,6 @@ const heroSlides = [
   {
     id: 2,
     name: "Massage Lotion",
-    // I restored the Massage Lotion data here (it was overwritten in your last attempt)
     image: null, 
     icon: <Sparkles className="w-12 h-12 md:w-16 md:h-16 text-purple-600 mb-4 md:mb-6" />,
     quote: "Hydrates without sticky residue. Perfect for Swedish massage.",
