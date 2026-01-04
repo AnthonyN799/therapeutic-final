@@ -22,8 +22,8 @@ const heroSlides = [
   {
     id: 1,
     name: "Pure Ice",
-    // Transparent Image 1
-    image: "https://i.imgur.com/8Q4Nq5c.png", 
+    // VALID LINK: Using your uploaded transparent image
+    image: "https://i.imgur.com/sLLnGFB.png", 
     icon: null, 
     quote: "The cooling effect is sustained for over 50 minutes from a single application, my clients love it. ~Dr. Ralph J. Ghosn - Physiotherapist",
     color: "bg-white"
@@ -31,12 +31,12 @@ const heroSlides = [
   {
     id: 2,
     name: "Pure Ice",
-    // Transparent Image 2 (Same bottle, different review)
-    image: "https://i.imgur.com/8Q4Nq5c.png", 
+    // VALID LINK: Using the same image for the second review
+    image: "https://i.imgur.com/sLLnGFB.png", 
     icon: null, 
     // Polished grammar for the review:
     quote: "It provides exceptional relief. Most of my patients are asking to take tubes home for post-session recovery. ~Marie-Joe Eid - Physiotherapist",
-    color: "bg-blue-50" // Changed background slightly to distinguish the slide
+    color: "bg-blue-50" 
   }
 ];
 
