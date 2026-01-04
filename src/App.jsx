@@ -442,7 +442,8 @@ export default function App() {
                 {/* Your Access Key */}
                 <input type="hidden" name="access_key" value="f23546d0-7c35-4655-adee-b6af9841d1cd" />
                 <input type="hidden" name="subject" value="New Wholesale Inquiry - Therapeutic Oils" />
-
+{/* The Bot Trap - Humans won't see this, but bots will fill it and get blocked */}
+<input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Your Name</label>
