@@ -137,7 +137,38 @@ export default function App() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+// --- CAROUSEL LOGIC START ---
+  const [currentSlide, setCurrentSlide] = useState(0);
 
+  const heroSlides = [
+    {
+      id: 1,
+      name: "Pure Ice",
+      // This is your image
+      image: "https://i.imgur.com/XDgCNMN.jpeg", 
+      icon: null, 
+      quote: "The glide and absorption are perfectly balanced for deep tissue work. My clients love the scent.",
+      color: "bg-white"
+    },
+    {
+      id: 2,
+      name: "Massage Lotion",
+      // I put a placeholder icon here since we don't have a pic yet
+      image: null, 
+      icon: <Sparkles className="w-16 h-16 text-purple-600 mb-6" />,
+      quote: "Finally a lotion that hydrates without leaving that sticky residue. Perfect for my Swedish massage clients.",
+      color: "bg-purple-50"
+    }
+  ];
+
+  // Auto-slide every 5 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+  // --- CAROUSEL LOGIC END ---
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 scroll-smooth">
       {/* Navigation */}
@@ -198,20 +229,60 @@ export default function App() {
             </div>
           </div>
           
-          <div className="relative">
-            <div className="relative aspect-square max-w-md mx-auto">
-               <div className="absolute inset-0 bg-gradient-to-tr from-slate-200 to-slate-50 rounded-[4rem] rotate-6 transform" />
-               <div className="absolute inset-0 bg-white border border-slate-100 rounded-[4rem] flex flex-col items-center justify-center p-12 text-center shadow-2xl">
-                  <Activity className="w-16 h-16 text-slate-900 mb-6" />
-                  <h3 className="text-3xl font-bold mb-4">Pure Ice</h3>
-                  <div className="flex items-center space-x-1 mb-6">
-                    {[1,2,3,4,5].map(i => <Sparkles key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
-                  </div>
-                  <p className="text-slate-500 text-sm italic">"The cooling effect is sustained for over an hour from a single application. My clients love it." ~Dr. Ralph J. Ghosn - Physiotherapist</p>
-                  <div className="mt-8 pt-8 border-t border-slate-100 w-full">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Featured Product</span>
-                  </div>
-               </div>
+         {/* SLIDING HERO CARD */}
+          <div className="relative h-[500px] w-full max-w-md mx-auto">
+            {heroSlides.map((slide, index) => (
+              <div 
+                key={slide.id}
+                className={`absolute inset-0 transition-all duration-1000 ease-in-out transform ${
+                  index === currentSlide ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
+                }`}
+              >
+                <div className="relative aspect-square">
+                   {/* Background Blob */}
+                   <div className={`absolute inset-0 bg-gradient-to-tr from-slate-200 to-slate-50 rounded-[4rem] rotate-6 transform transition-transform duration-700 ${index === currentSlide ? 'rotate-6' : 'rotate-0'}`} />
+                   
+                   {/* The Card Content */}
+                   <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[4rem] flex flex-col items-center justify-center p-8 text-center shadow-2xl overflow-hidden`}>
+                      
+                      {/* Logic: Show Image if it exists, otherwise show Icon */}
+                      {slide.image ? (
+                        <div className="w-64 h-64 mb-4 relative flex items-center justify-center">
+                          <img 
+                            src={slide.image} 
+                            alt={slide.name} 
+                            className="w-full h-full object-contain drop-shadow-2xl" 
+                          />
+                        </div>
+                      ) : (
+                        <div className="mb-4">{slide.icon}</div>
+                      )}
+
+                      <h3 className="text-3xl font-bold mb-4">{slide.name}</h3>
+                      <div className="flex items-center space-x-1 mb-6 justify-center">
+                        {[1,2,3,4,5].map(i => <Sparkles key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
+                      </div>
+                      <p className="text-slate-500 text-sm italic">"{slide.quote}"</p>
+                      
+                      <div className="mt-8 pt-8 border-t border-slate-100 w-full">
+                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Featured Product</span>
+                      </div>
+                   </div>
+                </div>
+              </div>
+            ))}
+            
+            {/* The Little Dots at the bottom to show which slide is active */}
+            <div className="absolute -bottom-12 left-0 right-0 flex justify-center space-x-2">
+              {heroSlides.map((_, index) => (
+                <button 
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`w-2 h-2 rounded-full transition-all ${index === currentSlide ? 'bg-slate-900 w-8' : 'bg-slate-300'}`}
+                />
+              ))}
+            </div>
+          </div>
             </div>
           </div>
         </div>
