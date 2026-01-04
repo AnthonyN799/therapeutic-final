@@ -22,16 +22,18 @@ const heroSlides = [
   {
     id: 1,
     name: "Pure Ice",
-    image: "https://imgur.com/a/73eTMDp", 
+    // I fixed this link to be a DIRECT image link (.jpeg) instead of an album
+    image: "https://i.imgur.com/73eTMDp.jpeg", 
     icon: null, 
-    quote: "The cooling effect is sustained for over 50 minutes from a single application, my clients love it." ~Dr. Ralph J. Ghosn - Physiotherapist,
+    // I fixed the quote marks here so the name is inside the text
+    quote: "The cooling effect is sustained for over 50 minutes from a single application, my clients love it. ~Dr. Ralph J. Ghosn - Physiotherapist",
     color: "bg-white"
   },
   {
     id: 2,
-    name: "Pure Ice",
-    image: "https://imgur.com/a/73eTMDp", 
-    icon: null,
+    name: "Massage Lotion",
+    image: null, 
+    icon: <Sparkles className="w-12 h-12 md:w-16 md:h-16 text-purple-600 mb-4 md:mb-6" />,
     quote: "Hydrates without sticky residue. Perfect for Swedish massage.",
     color: "bg-purple-50"
   }
