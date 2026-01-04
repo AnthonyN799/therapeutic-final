@@ -7,10 +7,7 @@ import {
   ShieldCheck, 
   Mail, 
   Phone, 
-  MapPin, 
-  ChevronRight, 
   Leaf, 
-  Info,
   Maximize2,
   X,
   Users,
@@ -51,7 +48,7 @@ const products = [
     border: "border-orange-200",
     icon: <Flame className="w-6 h-6" />
   },
- {
+  {
     id: 3,
     name: "Targeted Comfort Massage Oil",
     category: "Professional Massage",
@@ -137,14 +134,14 @@ export default function App() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-// --- CAROUSEL LOGIC START ---
+
+  // --- CAROUSEL LOGIC START ---
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const heroSlides = [
     {
       id: 1,
       name: "Pure Ice",
-      // This is your image
       image: "https://i.imgur.com/XDgCNMN.jpeg", 
       icon: null, 
       quote: "The glide and absorption are perfectly balanced for deep tissue work. My clients love the scent.",
@@ -153,7 +150,6 @@ export default function App() {
     {
       id: 2,
       name: "Massage Lotion",
-      // I put a placeholder icon here since we don't have a pic yet
       image: null, 
       icon: <Sparkles className="w-16 h-16 text-purple-600 mb-6" />,
       quote: "Finally a lotion that hydrates without leaving that sticky residue. Perfect for my Swedish massage clients.",
@@ -169,6 +165,7 @@ export default function App() {
     return () => clearInterval(timer);
   }, []);
   // --- CAROUSEL LOGIC END ---
+
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 scroll-smooth">
       {/* Navigation */}
@@ -229,7 +226,7 @@ export default function App() {
             </div>
           </div>
           
-         {/* SLIDING HERO CARD */}
+          {/* SLIDING HERO CARD */}
           <div className="relative h-[500px] w-full max-w-md mx-auto">
             {heroSlides.map((slide, index) => (
               <div 
@@ -283,13 +280,10 @@ export default function App() {
               ))}
             </div>
           </div>
-            </div>
-          </div>
         </div>
       </header>
 
-      {/* Social Proof Bar */}
-     {/* Social Proof Bar - NOW SLIDING */}
+      {/* Social Proof Bar - NOW SLIDING */}
       <section className="bg-slate-50 py-12 border-y border-slate-100 overflow-hidden relative">
         {/* This style tag defines the sliding animation right here */}
         <style>{`
@@ -513,8 +507,10 @@ export default function App() {
                 {/* Your Access Key */}
                 <input type="hidden" name="access_key" value="f23546d0-7c35-4655-adee-b6af9841d1cd" />
                 <input type="hidden" name="subject" value="New Wholesale Inquiry - Therapeutic Oils" />
-{/* The Bot Trap - Humans won't see this, but bots will fill it and get blocked */}
-<input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
+                
+                {/* The Bot Trap - Humans won't see this, but bots will fill it and get blocked */}
+                <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
+                
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Your Name</label>
