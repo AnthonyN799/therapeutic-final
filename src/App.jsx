@@ -615,7 +615,7 @@ export default function App() {
               <p>We do not sell, trade, or rent your personal identification information to others. We may use third-party service providers (such as Web3Forms for email processing and Vercel for hosting) to help us operate our business.</p>
 
               <h4 className="text-slate-900 font-bold text-lg">4. Contact Us</h4>
-              <p>If you have any questions about this Privacy Policy, please contact us at: <br/><strong>info@therapeuticoils.com</strong></p>
+              <p>If you have any questions about this Privacy Policy, please contact us at: <br/><strong>to.laboratories@gmail.com</strong></p>
             </div>
             
             <div className="mt-8 pt-8 border-t border-slate-100">
@@ -677,7 +677,7 @@ export default function App() {
                   </div>
                   <div>
                     <p className="text-xs text-slate-500 font-bold uppercase">Wholesale Dept</p>
-                    <p className="font-bold">info@therapeuticoils.com</p>
+                    <p className="font-bold">to.laboratories@gmail.com</p>
                   </div>
                 </div>
               </div>
