@@ -22,7 +22,8 @@ import {
   Trash2,
   CreditCard,
   Banknote,
-  ChevronDown
+  ChevronDown,
+  Heart // Changed Rabbit to Heart for compatibility
 } from 'lucide-react';
 
 // --- DATA: LANDING PAGE ---
@@ -225,8 +226,20 @@ const ShopPage = ({ onBack }) => {
   const [formData, setFormData] = useState({ name: '', phone: '', address: '' });
   const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
   
+  // Initialize Order Counter from Local Storage or default to 1531
+  const [orderCounter, setOrderCounter] = useState(() => {
+    const saved = localStorage.getItem('to_order_counter');
+    return saved ? parseInt(saved, 10) : 1531;
+  });
+
   // State for item selections (size/scent)
   const [selections, setSelections] = useState({}); 
+
+  const DELIVERY_FEE = 3.00;
+
+  useEffect(() => {
+    localStorage.setItem('to_order_counter', orderCounter.toString());
+  }, [orderCounter]);
 
   const handleSelectionChange = (itemId, type, value) => {
     setSelections(prev => ({
@@ -260,7 +273,8 @@ const ShopPage = ({ onBack }) => {
     setCart(cart.filter((_, index) => index !== indexToRemove));
   };
 
-  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+  const total = subtotal + (cart.length > 0 ? DELIVERY_FEE : 0);
 
   const sendOrder = () => {
     if (cart.length === 0) {
@@ -272,17 +286,28 @@ const ShopPage = ({ onBack }) => {
       return;
     }
 
+    // Generate Order ID (Pad with zeros to 6 digits)
+    const orderRef = `OrderID#${String(orderCounter).padStart(6, '0')}`;
+    
+    // Increment for next time
+    setOrderCounter(prev => prev + 1);
+
     // Construct the WhatsApp Message
-    let msg = `*New Order: Therapeutic Oils*%0A%0A` +
+    let msg = `*New Order: Therapeutic Oils* %0A` +
+              `*Ref:* ${orderRef}%0A%0A` +
               `*Customer:* ${formData.name}%0A` +
               `*Phone:* ${formData.phone}%0A` +
               `*Address:* ${formData.address}%0A%0A` +
               `*Order:*%0A${cart.map(i => "- " + i.name + " ($" + i.price + ")").join("%0A")}%0A` +
-              `*Total:* $${total}%0A%0A` +
+              `------------------%0A` +
+              `*Subtotal:* $${subtotal}%0A` +
+              `*Delivery:* $${DELIVERY_FEE}%0A` +
+              `*TOTAL:* $${total}%0A` +
+              `------------------%0A` +
               `*Payment:* ${paymentMethod}`;
 
     if (paymentMethod === "Whish Transfer") {
-      msg += `%0A(I will send the transfer screenshot shortly)`;
+      msg += `%0A%0A(Note: User will transfer via Whish. Please verify.)`;
     }
 
     // Open WhatsApp
@@ -395,9 +420,21 @@ const ShopPage = ({ onBack }) => {
                 ))}
               </div>
             )}
-            <div className="flex justify-between items-center mt-4 pt-4 border-t border-slate-200">
-              <span className="font-bold text-lg">Total</span>
-              <span className="font-black text-2xl text-emerald-600">${total}</span>
+            
+            {/* Totals Section */}
+            <div className="mt-4 pt-4 border-t border-slate-200 space-y-2">
+              <div className="flex justify-between items-center text-sm text-slate-500">
+                <span>Subtotal</span>
+                <span>${subtotal}</span>
+              </div>
+              <div className="flex justify-between items-center text-sm text-slate-500">
+                <span>Delivery</span>
+                <span>${cart.length > 0 ? DELIVERY_FEE : 0}</span>
+              </div>
+              <div className="flex justify-between items-center pt-2 border-t border-slate-200">
+                <span className="font-bold text-lg">Total</span>
+                <span className="font-black text-2xl text-emerald-600">${total}</span>
+              </div>
             </div>
           </div>
 
@@ -455,9 +492,13 @@ const ShopPage = ({ onBack }) => {
               </div>
               
               {paymentMethod === 'Whish Transfer' && (
-                <div className="mt-4 p-4 bg-red-50 text-red-800 rounded-xl text-sm border border-red-100">
+                <div className="mt-4 p-4 bg-red-50 text-red-800 rounded-xl text-sm border border-red-100 leading-relaxed">
                   <strong>Transfer to: +961 03 203 567</strong><br/>
-                  Please calculate at the daily rate if paying in LBP. Please send the transfer screenshot to WhatsApp after placing the order.
+                  <span className="text-xs">
+                    Please calculate at the daily rate if paying in LBP. 
+                    <br/>
+                    Important: Include your <strong>Full Name</strong> and <strong>Order Ref Number</strong> in the transfer description.
+                  </span>
                 </div>
               )}
             </div>
@@ -789,7 +830,7 @@ export default function App() {
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-pink-50 text-pink-500 rounded-full">
                 {/* Changed to Heart/Wind to ensure no version conflicts */}
-                <Sparkles className="w-6 h-6" /> 
+                <Heart className="w-6 h-6" /> 
               </div>
               <div className="text-left">
                 <p className="font-bold text-slate-900">Cruelty Free</p>
