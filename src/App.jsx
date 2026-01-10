@@ -73,7 +73,7 @@ const products = [
     tagline: "Advanced Warming Sensation",
     description: "A specialized cream that provides a gentle, soothing warmth. Formulated with rosemary to help prepare the skin and muscles for manual therapy.",
     keyFeatures: ["Sustained warming effect", "Non-greasy professional texture", "Botanical Rosemary infusion"],
-    activeIngredients: ["Methyl Salicylate", "Rosemary Essential Oil"],
+    activeIngredients: ["Wintergreen essential oil", "Rosemary Essential Oil"],
     usage: "Gently massage a thin layer into the skin 2–3 times daily.",
     packaging: "100 mL Professional Tube",
     color: "bg-orange-50",
@@ -88,7 +88,7 @@ const products = [
     tagline: "Smooth Glide & Thermal Support",
     description: "A high-performance massage oil that balances superior glide with a comforting warming effect. Designed for deep tissue work and muscle preparation.",
     keyFeatures: ["Enhanced tactile feedback", "Soothing thermal support", "Available in Vanilla, Chamomile, Coconut, Oud, Musk and Unscented"],
-    activeIngredients: ["Methyl Salicylate", "Rosemary Extract"],
+    activeIngredients: ["Wintergreen essential oil", "Rosemary Extract"],
     usage: "Warm a small amount in hands and massage gently until fully absorbed.",
     packaging: "250 mL Professional Bottle",
     color: "bg-amber-50",
@@ -207,7 +207,7 @@ const shopItems = [
     sizes: null,
     categories: ["Massage supplies", "Personal care"],
     details: {
-      ingredients: ["Methyl Salicylate", "Rosemary Extract", "Carrier Oils Blend"],
+      ingredients: ["Wintergreen essential oil", "Rosemary Extract", "Carrier Oils Blend"],
       usage: "Warm a small amount in hands and massage gently until fully absorbed. Designed for deep tissue work."
     }
   },
@@ -237,7 +237,7 @@ const shopItems = [
     hasOptions: false,
     categories: ["For active people", "Personal care"],
     details: {
-      ingredients: ["Methyl Salicylate", "Rosemary Essential Oil", "Warming Agents"],
+      ingredients: ["Wintergreen essential oil", "Rosemary Essential Oil", "Warming Agents"],
       usage: "Gently massage a thin layer into the skin 2–3 times daily to provide soothing warmth."
     }
   },
