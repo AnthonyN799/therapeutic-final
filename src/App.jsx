@@ -170,12 +170,12 @@ const shopItems = [
   {
     id: 102,
     name: "Targeted Massage Oil",
-    price: 12, // Estimated RRP based on wholesale
+    price: 14, // RRP ~100% markup from $7 B2B
     description: "Deep tissue blend (250mL)",
     icon: <Droplets className="w-6 h-6 text-emerald-600" />,
     hasOptions: true,
     scents: ["Vanilla", "Chamomile", "Oud", "Musk", "Unscented"],
-    sizes: [{ label: "250mL Bottle", price: 12 }]
+    sizes: null // Single size
   },
   {
     id: 103,
@@ -225,7 +225,7 @@ const ShopPage = ({ onBack }) => {
   const [formData, setFormData] = useState({ name: '', phone: '', address: '' });
   const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
   
-  // State for item selections
+  // State for item selections (size/scent)
   const [selections, setSelections] = useState({}); 
 
   const handleSelectionChange = (itemId, type, value) => {
@@ -346,13 +346,16 @@ const ShopPage = ({ onBack }) => {
                 {item.scents && (
                    <div className="flex items-center space-x-2">
                      <span className="text-xs font-bold uppercase text-slate-400 w-12">Scent:</span>
-                     <select 
-                       className="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 outline-none"
-                       onChange={(e) => handleSelectionChange(item.id, 'scent', e.target.value)}
-                       value={selections[item.id]?.scent || item.scents[0]}
-                     >
-                       {item.scents.map(scent => <option key={scent} value={scent}>{scent}</option>)}
-                     </select>
+                     <div className="relative">
+                        <select 
+                          className="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1 pr-8 outline-none appearance-none cursor-pointer"
+                          onChange={(e) => handleSelectionChange(item.id, 'scent', e.target.value)}
+                          value={selections[item.id]?.scent || item.scents[0]}
+                        >
+                          {item.scents.map(scent => <option key={scent} value={scent}>{scent}</option>)}
+                        </select>
+                        <ChevronDown className="w-4 h-4 text-slate-400 absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none" />
+                     </div>
                    </div>
                 )}
               </div>
@@ -381,7 +384,7 @@ const ShopPage = ({ onBack }) => {
               <div className="space-y-3">
                 {cart.map((item, index) => (
                   <div key={index} className="flex justify-between items-center text-sm border-b border-slate-200 pb-2 last:border-0">
-                    <span className="font-medium text-slate-700">{item.name}</span>
+                    <span className="font-medium text-slate-700 w-2/3">{item.name}</span>
                     <div className="flex items-center space-x-4">
                       <span className="font-bold">${item.price}</span>
                       <button onClick={() => removeFromCart(index)} className="text-red-400 hover:text-red-600">
@@ -621,10 +624,9 @@ export default function App() {
                    {/* The Card Content */}
                    <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-6 text-center shadow-2xl`}>
                       
-                      {/* IMAGE AREA - Circular, smaller frame, clickable */}
+                      {/* IMAGE AREA */}
                       <div className="flex-1 flex items-center justify-center w-full relative z-10 py-4">
                         {slide.image ? (
-                          // Circular Frame Container with click handler
                           <div 
                             className="w-56 h-56 rounded-full border-[6px] border-white bg-white shadow-xl relative flex items-center justify-center overflow-hidden cursor-pointer group hover:scale-105 transition-transform duration-300"
                             onClick={() => setSelectedHeroSlide(slide)}
@@ -634,7 +636,6 @@ export default function App() {
                               alt={slide.name} 
                               className="w-full h-full object-contain p-2 group-hover:opacity-90 transition-opacity" 
                             />
-                            {/* Expand Icon overlay on hover */}
                             <div className="absolute inset-0 bg-slate-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                <Maximize2 className="text-white w-8 h-8 drop-shadow-lg"/>
                             </div>
@@ -785,18 +786,16 @@ export default function App() {
       <section className="border-t border-slate-100 bg-slate-50/50">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            {/* 1. Cruelty Free - CLEANER LOOK */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-pink-50 text-pink-500 rounded-full">
-                <Rabbit className="w-6 h-6" />
+                {/* Changed to Heart/Wind to ensure no version conflicts */}
+                <Sparkles className="w-6 h-6" /> 
               </div>
               <div className="text-left">
                 <p className="font-bold text-slate-900">Cruelty Free</p>
               </div>
             </div>
 
-            {/* 2. Paraben Free - CLEANER LOOK */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-emerald-50 text-emerald-500 rounded-full">
                 <ShieldCheck className="w-6 h-6" />
@@ -806,16 +805,14 @@ export default function App() {
               </div>
             </div>
 
-            {/* 3. Silicone Free - CLEANER LOOK */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-blue-50 text-blue-500 rounded-full">
-                <Feather className="w-6 h-6" />
+                <Wind className="w-6 h-6" />
               </div>
               <div className="text-left">
                 <p className="font-bold text-slate-900">Silicone Free</p>
               </div>
             </div>
-
           </div>
         </div>
       </section>
