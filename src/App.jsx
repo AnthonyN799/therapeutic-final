@@ -704,6 +704,8 @@ const ShopPage = ({ onBack }) => {
                 <div className="mt-4 p-4 bg-red-50 text-red-800 rounded-xl text-sm border border-red-100 leading-relaxed">
                   <strong>Transfer to: +961 03 203 567</strong><br/>
                   <span className="text-xs">
+                    Please calculate at the daily rate if paying in LBP. 
+                    <br/>
                     Important: Include your <strong>Full Name</strong> and <strong>Order Ref Number</strong> in the transfer description.
                   </span>
                 </div>
@@ -881,9 +883,10 @@ export default function App() {
                    {/* The Card Content */}
                    <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-6 text-center shadow-2xl`}>
                       
-                      {/* IMAGE AREA */}
+                      {/* IMAGE AREA - Circular, smaller frame, clickable */}
                       <div className="flex-1 flex items-center justify-center w-full relative z-10 py-4">
                         {slide.image ? (
+                          // Circular Frame Container with click handler
                           <div 
                             className="w-56 h-56 rounded-full border-[6px] border-white bg-white shadow-xl relative flex items-center justify-center overflow-hidden cursor-pointer group hover:scale-105 transition-transform duration-300"
                             onClick={() => setSelectedHeroSlide(slide)}
@@ -893,6 +896,7 @@ export default function App() {
                               alt={slide.name} 
                               className="w-full h-full object-contain p-2 group-hover:opacity-90 transition-opacity" 
                             />
+                            {/* Expand Icon overlay on hover */}
                             <div className="absolute inset-0 bg-slate-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                <Maximize2 className="text-white w-8 h-8 drop-shadow-lg"/>
                             </div>
@@ -1317,16 +1321,30 @@ export default function App() {
                     />
                   </div>
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Work Email</label>
-                  <input 
-                    type="email" 
-                    name="email" 
-                    required 
-                    className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" 
-                    placeholder="john@clinic.com" 
-                  />
+
+                {/* New Grid for Email and Phone */}
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Work Email</label>
+                      <input 
+                        type="email" 
+                        name="email" 
+                        required 
+                        className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" 
+                        placeholder="john@clinic.com" 
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Phone Number</label>
+                      <input 
+                        type="tel" 
+                        name="phone" 
+                        className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" 
+                        placeholder="03 123 456" 
+                      />
+                    </div>
                 </div>
+
                 <div className="space-y-1">
                   <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Message</label>
                   <textarea 
