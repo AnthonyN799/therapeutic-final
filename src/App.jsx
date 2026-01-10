@@ -161,6 +161,19 @@ const faqs = [
 // --- DATA: SHOP ITEMS WITH RETAIL PRICES & OPTIONS ---
 const shopItems = [
   {
+    id: 107,
+    name: "Hydrating Body Lotion",
+    price: 15,
+    description: "Aloe Vera Base (500mL Pump Bottle)",
+    icon: <Sparkles className="w-6 h-6 text-purple-500" />,
+    hasOptions: false,
+    categories: ["Personal care"],
+    details: {
+      ingredients: ["Aloe Barbadensis Leaf", "Vitamin E", "Botanical Extracts"],
+      usage: "Apply generously to skin. Perfect for Swedish massage and clients requiring extra hydration without greasiness."
+    }
+  },
+  {
     id: 101,
     name: "Premium Massage Candle",
     description: "Natural Soy Wax Blend",
@@ -242,19 +255,6 @@ const shopItems = [
     details: {
       ingredients: ["Cypress Essential Oil", "Vitamin E", "Nourishing Oil Base"],
       usage: "For professional use. Apply to dampened skin for maximum absorption during toning massage."
-    }
-  },
-  {
-    id: 107,
-    name: "Hydrating Body Lotion",
-    price: 15,
-    description: "Aloe Vera Base (Pump Bottle)",
-    icon: <Sparkles className="w-6 h-6 text-purple-500" />,
-    hasOptions: false,
-    categories: ["Personal care"],
-    details: {
-      ingredients: ["Aloe Barbadensis Leaf", "Vitamin E", "Botanical Extracts"],
-      usage: "Apply generously to skin. Perfect for Swedish massage and clients requiring extra hydration without greasiness."
     }
   }
 ];
@@ -704,8 +704,6 @@ const ShopPage = ({ onBack }) => {
                 <div className="mt-4 p-4 bg-red-50 text-red-800 rounded-xl text-sm border border-red-100 leading-relaxed">
                   <strong>Transfer to: +961 03 203 567</strong><br/>
                   <span className="text-xs">
-                    Please calculate at the daily rate if paying in LBP. 
-                    <br/>
                     Important: Include your <strong>Full Name</strong> and <strong>Order Ref Number</strong> in the transfer description.
                   </span>
                 </div>
