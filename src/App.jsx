@@ -23,7 +23,8 @@ import {
   CreditCard,
   Banknote,
   ChevronDown,
-  Heart // Changed Rabbit to Heart for compatibility
+  Heart,
+  Info
 } from 'lucide-react';
 
 // --- DATA: LANDING PAGE ---
@@ -166,57 +167,85 @@ const shopItems = [
     sizes: [
       { label: "Standard (80g)", price: 12 },
       { label: "Large (160g)", price: 17 }
-    ]
+    ],
+    details: {
+      ingredients: ["Natural Soy Wax", "Essential Oils", "Cotton Wick", "Shea Butter"],
+      usage: "Light the wick and allow the wax to melt for 10-15 minutes. Blow out the flame and pour the warm, nourishing oil directly onto the skin for a soothing massage."
+    }
   },
   {
     id: 102,
     name: "Targeted Massage Oil",
-    price: 14, // RRP ~100% markup from $7 B2B
+    price: 14, 
     description: "Deep tissue blend (250mL)",
     icon: <Droplets className="w-6 h-6 text-emerald-600" />,
     hasOptions: true,
     scents: ["Vanilla", "Chamomile", "Oud", "Musk", "Unscented"],
-    sizes: null // Single size
+    sizes: null,
+    details: {
+      ingredients: ["Methyl Salicylate", "Rosemary Extract", "Carrier Oils Blend"],
+      usage: "Warm a small amount in hands and massage gently until fully absorbed. Designed for deep tissue work."
+    }
   },
   {
     id: 103,
     name: "Pure Ice Gel",
-    price: 12, // RRP from PDF
+    price: 12, 
     description: "Cryo-Recovery Formula (100mL)",
     icon: <Wind className="w-6 h-6 text-blue-500" />,
-    hasOptions: false
+    hasOptions: false,
+    details: {
+      ingredients: ["Menthol", "Eucalyptus Globulus Leaf Oil", "Cooling Agents"],
+      usage: "Apply a thin layer 3–5 times daily to desired areas. Ideal for post-activity refreshment and cooling relief."
+    }
   },
   {
     id: 104,
     name: "Actiflam Cream",
-    price: 12, // RRP from PDF
+    price: 12,
     description: "Warming Rosemary Formula (100mL)",
     icon: <Flame className="w-6 h-6 text-orange-500" />,
-    hasOptions: false
+    hasOptions: false,
+    details: {
+      ingredients: ["Methyl Salicylate", "Rosemary Essential Oil", "Warming Agents"],
+      usage: "Gently massage a thin layer into the skin 2–3 times daily to provide soothing warmth."
+    }
   },
   {
     id: 105,
     name: "Firmessence Cream",
-    price: 14, // RRP from PDF
+    price: 14, 
     description: "Skin Toning with Cypress (100mL)",
     icon: <Leaf className="w-6 h-6 text-emerald-500" />,
-    hasOptions: false
+    hasOptions: false,
+    details: {
+      ingredients: ["Cypress Essential Oil", "Shea Butter Base", "Skin Firming Complex"],
+      usage: "Massage into targeted areas twice daily using circular motions to improve skin texture and elasticity."
+    }
   },
   {
     id: 106,
     name: "Firmessence Oil",
-    price: 14, // RRP from PDF
+    price: 14, 
     description: "Vitamin E Enriched (250mL)",
     icon: <Droplets className="w-6 h-6 text-teal-500" />,
-    hasOptions: false
+    hasOptions: false,
+    details: {
+      ingredients: ["Cypress Essential Oil", "Vitamin E", "Nourishing Oil Base"],
+      usage: "For professional use. Apply to dampened skin for maximum absorption during toning massage."
+    }
   },
   {
     id: 107,
     name: "Hydrating Body Lotion",
-    price: 15, // RRP from PDF
+    price: 15,
     description: "Aloe Vera Base (Pump Bottle)",
     icon: <Sparkles className="w-6 h-6 text-purple-500" />,
-    hasOptions: false
+    hasOptions: false,
+    details: {
+      ingredients: ["Aloe Barbadensis Leaf", "Vitamin E", "Botanical Extracts"],
+      usage: "Apply generously to skin. Perfect for Swedish massage and clients requiring extra hydration without greasiness."
+    }
   }
 ];
 
@@ -226,20 +255,33 @@ const ShopPage = ({ onBack }) => {
   const [formData, setFormData] = useState({ name: '', phone: '', address: '' });
   const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
   
+  // State for item selections (size/scent)
+  const [selections, setSelections] = useState({}); 
+
+  // State for viewing product details
+  const [viewProduct, setViewProduct] = useState(null);
+
   // Initialize Order Counter from Local Storage or default to 1531
   const [orderCounter, setOrderCounter] = useState(() => {
     const saved = localStorage.getItem('to_order_counter');
     return saved ? parseInt(saved, 10) : 1531;
   });
 
-  // State for item selections (size/scent)
-  const [selections, setSelections] = useState({}); 
-
   const DELIVERY_FEE = 3.00;
 
   useEffect(() => {
     localStorage.setItem('to_order_counter', orderCounter.toString());
   }, [orderCounter]);
+
+  // Lock scroll when modal is open
+  useEffect(() => {
+    if (viewProduct) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; }
+  }, [viewProduct]);
 
   const handleSelectionChange = (itemId, type, value) => {
     setSelections(prev => ({
@@ -267,6 +309,8 @@ const ShopPage = ({ onBack }) => {
     if (selectedScent) fullName += ` - ${selectedScent}`;
 
     setCart([...cart, { ...item, name: fullName, price: finalPrice }]);
+    // Optionally close modal if open
+    setViewProduct(null);
   };
 
   const removeFromCart = (indexToRemove) => {
@@ -334,11 +378,14 @@ const ShopPage = ({ onBack }) => {
           
           {shopItems.map((item) => (
             <div key={item.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
-              <div className="flex justify-between items-start mb-4">
+              <div className="flex justify-between items-start mb-4 cursor-pointer" onClick={() => setViewProduct(item)}>
                 <div className="flex items-center space-x-4">
                   <div className="p-3 bg-slate-50 rounded-xl text-slate-700">{item.icon}</div>
                   <div>
-                    <h3 className="font-bold text-lg">{item.name}</h3>
+                    <h3 className="font-bold text-lg flex items-center">
+                      {item.name}
+                      <Info className="w-4 h-4 text-slate-400 ml-2" />
+                    </h3>
                     <p className="text-slate-500 text-sm">{item.description}</p>
                   </div>
                 </div>
@@ -394,6 +441,55 @@ const ShopPage = ({ onBack }) => {
             </div>
           ))}
         </div>
+
+        {/* Product Details Modal */}
+        {viewProduct && (
+          <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-white w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-3xl p-8 relative shadow-2xl animate-in zoom-in-95 duration-200">
+              <button 
+                onClick={() => setViewProduct(null)}
+                className="absolute top-6 right-6 p-2 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors z-10"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              
+              <div className="flex flex-col items-center text-center mb-6">
+                <div className="p-6 bg-slate-50 rounded-full mb-4">
+                  {React.cloneElement(viewProduct.icon, { className: "w-12 h-12 text-slate-900" })}
+                </div>
+                <h2 className="text-2xl font-bold mb-1">{viewProduct.name}</h2>
+                <p className="text-emerald-600 font-bold text-xl">${getPrice(viewProduct)}</p>
+              </div>
+
+              <div className="space-y-6 text-left">
+                <div>
+                  <h4 className="text-xs font-black uppercase text-slate-400 mb-2">Description</h4>
+                  <p className="text-slate-600 text-sm leading-relaxed">{viewProduct.description}. {viewProduct.details?.usage}</p>
+                </div>
+
+                <div>
+                  <h4 className="text-xs font-black uppercase text-slate-400 mb-2">Key Ingredients</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {viewProduct.details?.ingredients.map((ing, i) => (
+                      <span key={i} className="px-3 py-1 bg-slate-100 rounded-full text-xs font-medium text-slate-600">
+                        {ing}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-slate-100">
+                  <button 
+                    onClick={() => addToCart(viewProduct)}
+                    className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-700 transition-colors"
+                  >
+                    Add to Cart - ${getPrice(viewProduct)}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Cart & Checkout Section */}
         <div className="bg-white rounded-3xl p-8 shadow-xl border border-slate-200">
