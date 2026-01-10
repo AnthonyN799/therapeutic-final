@@ -155,7 +155,7 @@ const faqs = [
   }
 ];
 
-// --- DATA: SHOP ITEMS WITH RETAIL PRICES & OPTIONS ---
+// --- DATA: SHOP ITEMS WITH CATEGORIES ---
 const shopItems = [
   {
     id: 101,
@@ -168,6 +168,7 @@ const shopItems = [
       { label: "Standard (80g)", price: 12 },
       { label: "Large (160g)", price: 17 }
     ],
+    categories: ["Massage supplies", "Personal care"],
     details: {
       ingredients: ["Natural Soy Wax", "Essential Oils", "Cotton Wick", "Shea Butter"],
       usage: "Light the wick and allow the wax to melt for 10-15 minutes. Blow out the flame and pour the warm, nourishing oil directly onto the skin for a soothing massage."
@@ -182,6 +183,7 @@ const shopItems = [
     hasOptions: true,
     scents: ["Vanilla", "Chamomile", "Oud", "Musk", "Unscented"],
     sizes: null,
+    categories: ["Massage supplies", "Personal care"],
     details: {
       ingredients: ["Methyl Salicylate", "Rosemary Extract", "Carrier Oils Blend"],
       usage: "Warm a small amount in hands and massage gently until fully absorbed. Designed for deep tissue work."
@@ -194,6 +196,7 @@ const shopItems = [
     description: "Cryo-Recovery Formula (100mL)",
     icon: <Wind className="w-6 h-6 text-blue-500" />,
     hasOptions: false,
+    categories: ["For active people", "Personal care"],
     details: {
       ingredients: ["Menthol", "Eucalyptus Globulus Leaf Oil", "Cooling Agents"],
       usage: "Apply a thin layer 3–5 times daily to desired areas. Ideal for post-activity refreshment and cooling relief."
@@ -206,6 +209,7 @@ const shopItems = [
     description: "Warming Rosemary Formula (100mL)",
     icon: <Flame className="w-6 h-6 text-orange-500" />,
     hasOptions: false,
+    categories: ["For active people", "Personal care"],
     details: {
       ingredients: ["Methyl Salicylate", "Rosemary Essential Oil", "Warming Agents"],
       usage: "Gently massage a thin layer into the skin 2–3 times daily to provide soothing warmth."
@@ -218,6 +222,7 @@ const shopItems = [
     description: "Skin Toning with Cypress (100mL)",
     icon: <Leaf className="w-6 h-6 text-emerald-500" />,
     hasOptions: false,
+    categories: ["Cellulite care", "Personal care"],
     details: {
       ingredients: ["Cypress Essential Oil", "Shea Butter Base", "Skin Firming Complex"],
       usage: "Massage into targeted areas twice daily using circular motions to improve skin texture and elasticity."
@@ -230,6 +235,7 @@ const shopItems = [
     description: "Vitamin E Enriched (250mL)",
     icon: <Droplets className="w-6 h-6 text-teal-500" />,
     hasOptions: false,
+    categories: ["Cellulite care", "Personal care"],
     details: {
       ingredients: ["Cypress Essential Oil", "Vitamin E", "Nourishing Oil Base"],
       usage: "For professional use. Apply to dampened skin for maximum absorption during toning massage."
@@ -242,12 +248,15 @@ const shopItems = [
     description: "Aloe Vera Base (Pump Bottle)",
     icon: <Sparkles className="w-6 h-6 text-purple-500" />,
     hasOptions: false,
+    categories: ["Personal care"],
     details: {
       ingredients: ["Aloe Barbadensis Leaf", "Vitamin E", "Botanical Extracts"],
       usage: "Apply generously to skin. Perfect for Swedish massage and clients requiring extra hydration without greasiness."
     }
   }
 ];
+
+const SHOP_CATEGORIES = ["All", "Massage supplies", "For active people", "Cellulite care", "Personal care"];
 
 // --- COMPONENT: SHOP PAGE ---
 const ShopPage = ({ onBack }) => {
@@ -260,6 +269,9 @@ const ShopPage = ({ onBack }) => {
 
   // State for viewing product details
   const [viewProduct, setViewProduct] = useState(null);
+
+  // State for active category
+  const [activeCategory, setActiveCategory] = useState("All");
 
   // Initialize Order Counter from Local Storage or default to 1531
   const [orderCounter, setOrderCounter] = useState(() => {
@@ -358,6 +370,11 @@ const ShopPage = ({ onBack }) => {
     window.open(`https://wa.me/9613203567?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
+  // Filter items based on active category
+  const filteredItems = activeCategory === "All" 
+    ? shopItems 
+    : shopItems.filter(item => item.categories.includes(activeCategory));
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20 animate-in fade-in duration-300">
       {/* Shop Header */}
@@ -372,12 +389,27 @@ const ShopPage = ({ onBack }) => {
 
       <div className="max-w-3xl mx-auto px-6 py-8">
         
+        {/* Category Filter */}
+        <div className="flex overflow-x-auto pb-4 mb-6 gap-2 no-scrollbar">
+          {SHOP_CATEGORIES.map(cat => (
+            <button 
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all border ${
+                activeCategory === cat 
+                ? 'bg-slate-900 text-white border-slate-900' 
+                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
         {/* Product List */}
         <div className="space-y-6 mb-12">
-          <h2 className="text-xl font-bold mb-6 flex items-center"><ShoppingBag className="w-5 h-5 mr-2" /> Select Products</h2>
-          
-          {shopItems.map((item) => (
-            <div key={item.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
+          {filteredItems.map((item) => (
+            <div key={item.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="flex justify-between items-start mb-4 cursor-pointer" onClick={() => setViewProduct(item)}>
                 <div className="flex items-center space-x-4">
                   <div className="p-3 bg-slate-50 rounded-xl text-slate-700">{item.icon}</div>
@@ -923,6 +955,8 @@ export default function App() {
       <section className="border-t border-slate-100 bg-slate-50/50">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            {/* 1. Cruelty Free - CLEANER LOOK */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-pink-50 text-pink-500 rounded-full">
                 {/* Changed to Heart/Wind to ensure no version conflicts */}
@@ -933,6 +967,7 @@ export default function App() {
               </div>
             </div>
 
+            {/* 2. Paraben Free - CLEANER LOOK */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-emerald-50 text-emerald-500 rounded-full">
                 <ShieldCheck className="w-6 h-6" />
@@ -942,6 +977,7 @@ export default function App() {
               </div>
             </div>
 
+            {/* 3. Silicone Free - CLEANER LOOK */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-blue-50 text-blue-500 rounded-full">
                 <Wind className="w-6 h-6" />
@@ -950,6 +986,7 @@ export default function App() {
                 <p className="font-bold text-slate-900">Silicone Free</p>
               </div>
             </div>
+
           </div>
         </div>
       </section>
