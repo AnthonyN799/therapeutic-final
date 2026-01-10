@@ -215,8 +215,8 @@ const shopItems = [
     id: 103,
     name: "Pure Ice Gel",
     price: 12, 
-    // I added this one for you already:
-    image: "https://i.imgur.com/sLLnGFB.png",
+    // UPDATED IMAGE LINK
+    image: "https://i.imgur.com/XXfbpzI.png",
     description: "Cryo-Recovery Formula (100mL)",
     icon: <Wind className="w-6 h-6 text-blue-500" />,
     hasOptions: false,
@@ -288,6 +288,9 @@ const ShopPage = ({ onBack }) => {
 
   // State for viewing product details
   const [viewProduct, setViewProduct] = useState(null);
+  
+  // State for expanded image
+  const [expandedImage, setExpandedImage] = useState(null);
 
   // State for active category
   const [activeCategory, setActiveCategory] = useState("All");
@@ -309,13 +312,13 @@ const ShopPage = ({ onBack }) => {
 
   // Lock scroll when modal is open
   useEffect(() => {
-    if (viewProduct) {
+    if (viewProduct || expandedImage) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
     return () => { document.body.style.overflow = 'unset'; }
-  }, [viewProduct]);
+  }, [viewProduct, expandedImage]);
 
   // Auto-hide toast
   useEffect(() => {
@@ -489,8 +492,6 @@ const ShopPage = ({ onBack }) => {
             <div key={item.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="flex justify-between items-start mb-4 cursor-pointer" onClick={() => setViewProduct(item)}>
                 <div className="flex items-center space-x-4">
-                  
-                  {/* Shop Item Image / Icon Logic */}
                   <div className="w-16 h-16 bg-slate-50 rounded-xl flex items-center justify-center overflow-hidden shrink-0">
                     {item.image ? (
                         <img src={item.image} alt={item.name} className="w-full h-full object-contain p-2" />
@@ -498,7 +499,6 @@ const ShopPage = ({ onBack }) => {
                         <div className="text-slate-700">{React.cloneElement(item.icon, { size: 24 })}</div>
                     )}
                   </div>
-                  
                   <div>
                     <h3 className="font-bold text-lg flex items-center">
                       {item.name}
@@ -578,10 +578,10 @@ const ShopPage = ({ onBack }) => {
           ))}
         </div>
 
-        {/* Product Details Modal - UPGRADED TO CIRCULAR FRAME */}
+        {/* Product Details Modal - UPGRADED TO CIRCULAR FRAME & EXPANDABLE */}
         {viewProduct && (
           <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-white w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-[2.5rem] p-8 relative shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="bg-white w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-3xl p-8 relative shadow-2xl animate-in zoom-in-95 duration-200">
               <button 
                 onClick={() => setViewProduct(null)}
                 className="absolute top-6 right-6 p-2 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors z-10"
@@ -589,33 +589,41 @@ const ShopPage = ({ onBack }) => {
                 <X className="w-5 h-5" />
               </button>
               
-              <div className="flex flex-col items-center text-center mb-8">
+              <div className="flex flex-col items-center text-center mb-6">
                 
-                {/* HERO STYLE CIRCULAR FRAME */}
-                <div className="w-48 h-48 rounded-full border-[6px] border-slate-100 bg-white shadow-xl relative flex items-center justify-center overflow-hidden mb-6">
+                {/* HERO STYLE CIRCULAR FRAME - CLICKABLE FOR EXPANSION */}
+                <div 
+                    className="w-48 h-48 rounded-full border-[6px] border-slate-100 bg-white shadow-xl relative flex items-center justify-center overflow-hidden mb-6 cursor-zoom-in group"
+                    onClick={() => viewProduct.image && setExpandedImage(viewProduct.image)}
+                >
                     {viewProduct.image ? (
-                        <img 
-                            src={viewProduct.image} 
-                            alt={viewProduct.name} 
-                            className="w-full h-full object-contain p-4" 
-                        />
+                        <>
+                            <img 
+                                src={viewProduct.image} 
+                                alt={viewProduct.name} 
+                                className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-300" 
+                            />
+                             <div className="absolute inset-0 bg-slate-900/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                 <Maximize2 className="text-slate-900 w-8 h-8 opacity-50"/>
+                             </div>
+                        </>
                     ) : (
                         <div className="text-slate-900">{React.cloneElement(viewProduct.icon, { size: 64 })}</div>
                     )}
                 </div>
 
-                <h2 className="text-3xl font-bold mb-1">{viewProduct.name}</h2>
-                <p className="text-emerald-600 font-bold text-2xl">${getPrice(viewProduct)}</p>
+                <h2 className="text-2xl font-bold mb-1">{viewProduct.name}</h2>
+                <p className="text-emerald-600 font-bold text-xl">${getPrice(viewProduct)}</p>
               </div>
 
-              <div className="space-y-8 text-left">
+              <div className="space-y-6 text-left">
                 <div>
                   <h4 className="text-xs font-black uppercase text-slate-400 mb-2">Description</h4>
                   <p className="text-slate-600 text-sm leading-relaxed">{viewProduct.description}. {viewProduct.details?.usage}</p>
                 </div>
 
                 <div>
-                  <h4 className="text-xs font-black uppercase text-slate-400 mb-2">Active Ingredients</h4>
+                  <h4 className="text-xs font-black uppercase text-slate-400 mb-2">Key Ingredients</h4>
                   <div className="flex flex-wrap gap-2">
                     {viewProduct.details?.ingredients.map((ing, i) => (
                       <span key={i} className="px-3 py-1 bg-slate-100 rounded-full text-xs font-medium text-slate-600">
@@ -625,10 +633,10 @@ const ShopPage = ({ onBack }) => {
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-slate-100">
+                <div className="pt-4 border-t border-slate-100">
                   <button 
                     onClick={() => addToCart(viewProduct)}
-                    className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-700 transition-colors shadow-lg"
+                    className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-700 transition-colors"
                   >
                     Add to Cart - ${getPrice(viewProduct)}
                   </button>
@@ -636,6 +644,25 @@ const ShopPage = ({ onBack }) => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Expanded Image Modal */}
+        {expandedImage && (
+            <div 
+                className="fixed inset-0 z-[400] flex items-center justify-center p-4 bg-slate-950/95 backdrop-blur-md animate-in fade-in duration-300 cursor-zoom-out"
+                onClick={() => setExpandedImage(null)}
+            >
+                <div className="relative w-full h-full max-w-4xl max-h-screen flex items-center justify-center">
+                     <img 
+                        src={expandedImage} 
+                        alt="Full size" 
+                        className="w-full h-full object-contain drop-shadow-2xl"
+                     />
+                     <button className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white">
+                        <X className="w-8 h-8" />
+                     </button>
+                </div>
+            </div>
         )}
 
         {/* Cart & Checkout Section */}
@@ -915,10 +942,9 @@ export default function App() {
                    {/* The Card Content */}
                    <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-6 text-center shadow-2xl`}>
                       
-                      {/* IMAGE AREA - Circular, smaller frame, clickable */}
+                      {/* IMAGE AREA */}
                       <div className="flex-1 flex items-center justify-center w-full relative z-10 py-4">
                         {slide.image ? (
-                          // Circular Frame Container with click handler
                           <div 
                             className="w-56 h-56 rounded-full border-[6px] border-white bg-white shadow-xl relative flex items-center justify-center overflow-hidden cursor-pointer group hover:scale-105 transition-transform duration-300"
                             onClick={() => setSelectedHeroSlide(slide)}
@@ -928,7 +954,6 @@ export default function App() {
                               alt={slide.name} 
                               className="w-full h-full object-contain p-2 group-hover:opacity-90 transition-opacity" 
                             />
-                            {/* Expand Icon overlay on hover */}
                             <div className="absolute inset-0 bg-slate-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                <Maximize2 className="text-white w-8 h-8 drop-shadow-lg"/>
                             </div>
