@@ -24,7 +24,10 @@ import {
   Banknote,
   ChevronDown,
   Heart,
-  Info
+  Info,
+  Plus,
+  Minus,
+  Check
 } from 'lucide-react';
 
 // --- DATA: LANDING PAGE ---
@@ -155,7 +158,7 @@ const faqs = [
   }
 ];
 
-// --- DATA: SHOP ITEMS WITH CATEGORIES ---
+// --- DATA: SHOP ITEMS WITH RETAIL PRICES & OPTIONS ---
 const shopItems = [
   {
     id: 101,
@@ -265,13 +268,18 @@ const ShopPage = ({ onBack }) => {
   const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
   
   // State for item selections (size/scent)
-  const [selections, setSelections] = useState({}); 
+  const [selections, setSelections] = useState({});
+  // State for quantities { itemId: quantity }
+  const [quantities, setQuantities] = useState({}); 
 
   // State for viewing product details
   const [viewProduct, setViewProduct] = useState(null);
 
   // State for active category
   const [activeCategory, setActiveCategory] = useState("All");
+  
+  // State for Toast Notification
+  const [showToast, setShowToast] = useState(false);
 
   // Initialize Order Counter from Local Storage or default to 1531
   const [orderCounter, setOrderCounter] = useState(() => {
@@ -295,11 +303,27 @@ const ShopPage = ({ onBack }) => {
     return () => { document.body.style.overflow = 'unset'; }
   }, [viewProduct]);
 
+  // Auto-hide toast
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => setShowToast(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
+
   const handleSelectionChange = (itemId, type, value) => {
     setSelections(prev => ({
       ...prev,
       [itemId]: { ...prev[itemId], [type]: value }
     }));
+  };
+
+  const handleQuantityChange = (itemId, delta) => {
+    setQuantities(prev => {
+      const current = prev[itemId] || 1;
+      const newValue = Math.max(1, current + delta);
+      return { ...prev, [itemId]: newValue };
+    });
   };
 
   const getPrice = (item) => {
@@ -314,13 +338,24 @@ const ShopPage = ({ onBack }) => {
     const selectedSize = item.sizes ? (selections[item.id]?.size || item.sizes[0].label) : null;
     const selectedScent = item.scents ? (selections[item.id]?.scent || item.scents[0]) : null;
     const finalPrice = getPrice(item);
+    const quantity = quantities[item.id] || 1;
     
     // Create a unique name including options
     let fullName = item.name;
     if (selectedSize) fullName += ` (${selectedSize})`;
     if (selectedScent) fullName += ` - ${selectedScent}`;
 
-    setCart([...cart, { ...item, name: fullName, price: finalPrice }]);
+    // Add item N times or grouped? For simple text cart, adding separate entries is easier to read in WhatsApp if count is low,
+    // but grouped is cleaner. Let's add multiple entries to keep logic simple for now.
+    const newItems = Array(quantity).fill({ ...item, name: fullName, price: finalPrice });
+    setCart([...cart, ...newItems]);
+    
+    // Show toast
+    setShowToast(true);
+    
+    // Reset quantity for this item
+    setQuantities(prev => ({...prev, [item.id]: 1}));
+
     // Optionally close modal if open
     setViewProduct(null);
   };
@@ -328,6 +363,13 @@ const ShopPage = ({ onBack }) => {
   const removeFromCart = (indexToRemove) => {
     setCart(cart.filter((_, index) => index !== indexToRemove));
   };
+  
+  const scrollToCart = () => {
+      const cartElement = document.getElementById('cart-section');
+      if (cartElement) {
+          cartElement.scrollIntoView({ behavior: 'smooth' });
+      }
+  }
 
   const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
   const total = subtotal + (cart.length > 0 ? DELIVERY_FEE : 0);
@@ -348,13 +390,23 @@ const ShopPage = ({ onBack }) => {
     // Increment for next time
     setOrderCounter(prev => prev + 1);
 
+    // Group items for message
+    const groupedItems = cart.reduce((acc, item) => {
+        acc[item.name] = (acc[item.name] || 0) + 1;
+        return acc;
+    }, {});
+    
+    const orderText = Object.entries(groupedItems)
+        .map(([name, count]) => `- ${count}x ${name}`)
+        .join("\n");
+
     // Construct the WhatsApp Message safely with newlines
     let msg = `*New Order: Therapeutic Oils*\n\n` +
               `*Ref:* ${orderRef}\n\n` +
               `*Customer:* ${formData.name}\n` +
               `*Phone:* ${formData.phone}\n` +
               `*Address:* ${formData.address}\n\n` +
-              `*Order:*\n${cart.map(i => "- " + i.name + " ($" + i.price + ")").join("\n")}\n` +
+              `*Order:*\n${orderText}\n` +
               `------------------\n` +
               `*Subtotal:* $${subtotal}\n` +
               `*Delivery:* $${DELIVERY_FEE}\n` +
@@ -383,7 +435,18 @@ const ShopPage = ({ onBack }) => {
           <button onClick={onBack} className="flex items-center text-slate-500 hover:text-slate-900 font-bold text-sm">
             <ArrowLeft className="w-5 h-5 mr-2" /> Back to Home
           </button>
-          <span className="font-black text-lg tracking-tight">SHOP ONLINE</span>
+          <div className="flex items-center space-x-4">
+             <span className="font-black text-lg tracking-tight hidden sm:block">SHOP ONLINE</span>
+             {/* Cart Icon in Header */}
+             <button onClick={scrollToCart} className="relative p-2 bg-slate-100 rounded-full hover:bg-emerald-50 transition-colors text-slate-900">
+                <ShoppingBag className="w-6 h-6" />
+                {cart.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-emerald-600 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
+                        {cart.length}
+                    </span>
+                )}
+             </button>
+          </div>
         </div>
       </div>
 
@@ -464,12 +527,30 @@ const ShopPage = ({ onBack }) => {
                 )}
               </div>
 
-              <button 
-                onClick={() => addToCart(item)}
-                className="w-full bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-slate-700 transition-colors flex items-center justify-center"
-              >
-                Add to Cart
-              </button>
+              {/* Quantity & Add Button Row */}
+              <div className="flex items-center gap-3">
+                  <div className="flex items-center border border-slate-200 rounded-xl bg-slate-50">
+                      <button 
+                        onClick={() => handleQuantityChange(item.id, -1)}
+                        className="px-3 py-3 text-slate-500 hover:text-slate-900"
+                      >
+                        <Minus className="w-4 h-4" />
+                      </button>
+                      <span className="w-8 text-center font-bold text-sm">{quantities[item.id] || 1}</span>
+                      <button 
+                        onClick={() => handleQuantityChange(item.id, 1)}
+                        className="px-3 py-3 text-slate-500 hover:text-slate-900"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </button>
+                  </div>
+                  <button 
+                    onClick={() => addToCart(item)}
+                    className="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-slate-700 transition-colors flex items-center justify-center"
+                  >
+                    Add to Cart
+                  </button>
+              </div>
             </div>
           ))}
         </div>
@@ -524,7 +605,7 @@ const ShopPage = ({ onBack }) => {
         )}
 
         {/* Cart & Checkout Section */}
-        <div className="bg-white rounded-3xl p-8 shadow-xl border border-slate-200">
+        <div id="cart-section" className="bg-white rounded-3xl p-8 shadow-xl border border-slate-200 scroll-mt-24">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
             <ShoppingBag className="w-6 h-6 mr-3" /> Your Cart
           </h2>
@@ -641,6 +722,15 @@ const ShopPage = ({ onBack }) => {
           </div>
 
         </div>
+
+        {/* Toast Notification */}
+        {showToast && (
+            <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center space-x-2 animate-in slide-in-from-bottom-5 fade-in duration-300 z-50">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                <span className="font-bold text-sm">Item added to cart</span>
+            </div>
+        )}
+
       </div>
     </div>
   );
