@@ -292,26 +292,26 @@ const ShopPage = ({ onBack }) => {
     // Increment for next time
     setOrderCounter(prev => prev + 1);
 
-    // Construct the WhatsApp Message
-    let msg = `*New Order: Therapeutic Oils* %0A` +
-              `*Ref:* ${orderRef}%0A%0A` +
-              `*Customer:* ${formData.name}%0A` +
-              `*Phone:* ${formData.phone}%0A` +
-              `*Address:* ${formData.address}%0A%0A` +
-              `*Order:*%0A${cart.map(i => "- " + i.name + " ($" + i.price + ")").join("%0A")}%0A` +
-              `------------------%0A` +
-              `*Subtotal:* $${subtotal}%0A` +
-              `*Delivery:* $${DELIVERY_FEE}%0A` +
-              `*TOTAL:* $${total}%0A` +
-              `------------------%0A` +
+    // Construct the WhatsApp Message safely with newlines
+    let msg = `*New Order: Therapeutic Oils*\n\n` +
+              `*Ref:* ${orderRef}\n\n` +
+              `*Customer:* ${formData.name}\n` +
+              `*Phone:* ${formData.phone}\n` +
+              `*Address:* ${formData.address}\n\n` +
+              `*Order:*\n${cart.map(i => "- " + i.name + " ($" + i.price + ")").join("\n")}\n` +
+              `------------------\n` +
+              `*Subtotal:* $${subtotal}\n` +
+              `*Delivery:* $${DELIVERY_FEE}\n` +
+              `*TOTAL:* $${total}\n` +
+              `------------------\n` +
               `*Payment:* ${paymentMethod}`;
 
     if (paymentMethod === "Whish Transfer") {
-      msg += `%0A%0A(Note: User will transfer via Whish. Please verify.)`;
+      msg += `\n\n(Note: User will transfer via Whish. Please verify.)`;
     }
 
-    // Open WhatsApp
-    window.open(`https://wa.me/9613203567?text=${msg}`, '_blank');
+    // Open WhatsApp - encodeURIComponent is crucial for the # in OrderID
+    window.open(`https://wa.me/9613203567?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   return (
