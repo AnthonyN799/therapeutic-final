@@ -17,11 +17,14 @@ import {
   Activity,
   FileText,
   MessageCircle,
-  Rabbit,   // Cruelty Free Icon
-  Feather   // Silicone Free Icon
+  ShoppingBag,
+  ArrowLeft,
+  Trash2,
+  CreditCard,
+  Banknote
 } from 'lucide-react';
 
-// --- DATA ---
+// --- DATA: LANDING PAGE ---
 const heroSlides = [
   {
     id: 1,
@@ -149,12 +152,240 @@ const faqs = [
   }
 ];
 
+// --- DATA: SHOP ITEMS ---
+const shopItems = [
+  {
+    id: 101,
+    name: "Relaxing Massage Candle",
+    price: 15,
+    description: "Lavender & Chamomile Soy Wax (80g)",
+    icon: <Flame className="w-6 h-6 text-amber-500" />
+  },
+  {
+    id: 102,
+    name: "Large Massage Candle",
+    price: 17,
+    description: "Premium Soy Wax Blend (160g)",
+    icon: <Flame className="w-6 h-6 text-amber-600" />
+  },
+  {
+    id: 103,
+    name: "Muscle Relief Oil",
+    price: 12,
+    description: "Deep tissue blend with Eucalyptus (100mL)",
+    icon: <Droplets className="w-6 h-6 text-emerald-600" />
+  },
+  {
+    id: 104,
+    name: "Pure Ice Gel",
+    price: 12,
+    description: "Cryo-Recovery Formula (100mL)",
+    icon: <Wind className="w-6 h-6 text-blue-500" />
+  },
+  {
+    id: 105,
+    name: "Actiflam Cream",
+    price: 12,
+    description: "Warming Rosemary Formula (100mL)",
+    icon: <Flame className="w-6 h-6 text-orange-500" />
+  }
+];
+
+// --- COMPONENT: SHOP PAGE ---
+const ShopPage = ({ onBack }) => {
+  const [cart, setCart] = useState([]);
+  const [formData, setFormData] = useState({ name: '', phone: '', address: '' });
+  const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
+
+  const addToCart = (item) => {
+    setCart([...cart, item]);
+  };
+
+  const removeFromCart = (indexToRemove) => {
+    setCart(cart.filter((_, index) => index !== indexToRemove));
+  };
+
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+  const sendOrder = () => {
+    if (cart.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
+    if (!formData.name || !formData.phone || !formData.address) {
+      alert("Please fill in your delivery details.");
+      return;
+    }
+
+    // Construct the WhatsApp Message
+    let msg = `*New Order: Therapeutic Oils*%0A%0A` +
+              `*Customer:* ${formData.name}%0A` +
+              `*Phone:* ${formData.phone}%0A` +
+              `*Address:* ${formData.address}%0A%0A` +
+              `*Order:*%0A${cart.map(i => "- " + i.name + " ($" + i.price + ")").join("%0A")}%0A` +
+              `*Total:* $${total}%0A%0A` +
+              `*Payment:* ${paymentMethod}`;
+
+    if (paymentMethod === "Whish Transfer") {
+      msg += `%0A(I will send the transfer screenshot shortly)`;
+    }
+
+    // Open WhatsApp
+    window.open(`https://wa.me/9613203567?text=${msg}`, '_blank');
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20 animate-in fade-in duration-300">
+      {/* Shop Header */}
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-20">
+        <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+          <button onClick={onBack} className="flex items-center text-slate-500 hover:text-slate-900 font-bold text-sm">
+            <ArrowLeft className="w-5 h-5 mr-2" /> Back to Home
+          </button>
+          <span className="font-black text-lg tracking-tight">SHOP ONLINE</span>
+        </div>
+      </div>
+
+      <div className="max-w-3xl mx-auto px-6 py-8">
+        
+        {/* Product List */}
+        <div className="space-y-4 mb-12">
+          <h2 className="text-xl font-bold mb-6">Select Products</h2>
+          {shopItems.map((item) => (
+            <div key={item.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center hover:shadow-md transition-all">
+              <div className="flex items-center space-x-4">
+                <div className="p-3 bg-slate-50 rounded-xl">{item.icon}</div>
+                <div>
+                  <h3 className="font-bold text-lg">{item.name}</h3>
+                  <p className="text-slate-500 text-sm">{item.description}</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => addToCart(item)}
+                className="bg-slate-900 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-slate-700 transition-colors"
+              >
+                Add ${item.price}
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* Cart & Checkout Section */}
+        <div className="bg-white rounded-3xl p-8 shadow-xl border border-slate-200">
+          <h2 className="text-2xl font-bold mb-6 flex items-center">
+            <ShoppingBag className="w-6 h-6 mr-3" /> Your Cart
+          </h2>
+
+          {/* Cart Items */}
+          <div className="bg-slate-50 rounded-xl p-4 mb-6">
+            {cart.length === 0 ? (
+              <p className="text-slate-400 italic text-center py-4">Your cart is empty.</p>
+            ) : (
+              <div className="space-y-3">
+                {cart.map((item, index) => (
+                  <div key={index} className="flex justify-between items-center text-sm border-b border-slate-200 pb-2 last:border-0">
+                    <span>{item.name}</span>
+                    <div className="flex items-center space-x-4">
+                      <span className="font-bold">${item.price}</span>
+                      <button onClick={() => removeFromCart(index)} className="text-red-400 hover:text-red-600">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="flex justify-between items-center mt-4 pt-4 border-t border-slate-200">
+              <span className="font-bold text-lg">Total</span>
+              <span className="font-black text-2xl text-emerald-600">${total}</span>
+            </div>
+          </div>
+
+          {/* Checkout Form */}
+          <div className="space-y-4">
+            <div>
+              <label className="text-xs font-bold uppercase text-slate-500 ml-1">Full Name</label>
+              <input 
+                type="text" 
+                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 ring-slate-900/10"
+                placeholder="John Doe"
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+              />
+            </div>
+            <div>
+              <label className="text-xs font-bold uppercase text-slate-500 ml-1">Phone Number</label>
+              <input 
+                type="text" 
+                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 ring-slate-900/10"
+                placeholder="03 123 456"
+                value={formData.phone}
+                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+              />
+            </div>
+            <div>
+              <label className="text-xs font-bold uppercase text-slate-500 ml-1">Delivery Address</label>
+              <textarea 
+                rows="2"
+                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 ring-slate-900/10 resize-none"
+                placeholder="City, Street, Building, Floor"
+                value={formData.address}
+                onChange={(e) => setFormData({...formData, address: e.target.value})}
+              />
+            </div>
+
+            {/* Payment Method */}
+            <div className="pt-4">
+              <label className="text-xs font-bold uppercase text-slate-500 ml-1 mb-2 block">Payment Method</label>
+              <div className="grid grid-cols-2 gap-4">
+                <button 
+                  onClick={() => setPaymentMethod('Cash on Delivery')}
+                  className={`p-4 rounded-xl border flex flex-col items-center justify-center text-sm font-bold transition-all ${paymentMethod === 'Cash on Delivery' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'}`}
+                >
+                  <Banknote className="w-6 h-6 mb-2" />
+                  Cash on Delivery
+                </button>
+                <button 
+                  onClick={() => setPaymentMethod('Whish Transfer')}
+                  className={`p-4 rounded-xl border flex flex-col items-center justify-center text-sm font-bold transition-all ${paymentMethod === 'Whish Transfer' ? 'bg-red-600 text-white border-red-600' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'}`}
+                >
+                  <CreditCard className="w-6 h-6 mb-2" />
+                  Whish Transfer
+                </button>
+              </div>
+              
+              {paymentMethod === 'Whish Transfer' && (
+                <div className="mt-4 p-4 bg-red-50 text-red-800 rounded-xl text-sm border border-red-100">
+                  <strong>Transfer to: +961 03 203 567</strong><br/>
+                  Please calculate at the daily rate if paying in LBP. Please send the transfer screenshot to WhatsApp after placing the order.
+                </div>
+              )}
+            </div>
+
+            <button 
+              onClick={sendOrder}
+              className="w-full py-5 bg-[#25D366] text-white rounded-xl font-bold hover:bg-green-600 transition-all flex items-center justify-center shadow-lg shadow-green-500/30 mt-6 text-lg"
+            >
+              <MessageCircle className="w-6 h-6 mr-2 fill-current" />
+              Order via WhatsApp
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
   const [selectedHeroSlide, setSelectedHeroSlide] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  
+  // NEW: State to toggle between Home and Shop views
+  const [currentView, setCurrentView] = useState('home'); 
 
   // --- SWIPE LOGIC ---
   const [touchStart, setTouchStart] = useState(null)
@@ -198,12 +429,18 @@ export default function App() {
     }
   }, [selectedProduct, selectedHeroSlide, showPrivacy]);
 
+  // RENDER SHOP IF VIEW IS 'shop'
+  if (currentView === 'shop') {
+    return <ShopPage onBack={() => setCurrentView('home')} />;
+  }
+
+  // OTHERWISE RENDER HOME PAGE
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 scroll-smooth">
       {/* Navigation */}
       <nav className={`fixed top-0 w-full z-[100] transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-md border-b border-slate-100 py-4 shadow-sm' : 'bg-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => setCurrentView('home')}>
             <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
               <Leaf className="text-white w-5 h-5" />
             </div>
@@ -212,9 +449,15 @@ export default function App() {
           <div className="hidden md:flex items-center space-x-10 text-[13px] font-bold uppercase tracking-widest text-slate-500">
             <a href="#benefits" className="hover:text-slate-900 transition-colors">Why Us</a>
             <a href="#products" className="hover:text-slate-900 transition-colors">Products</a>
-            <a href="#faq" className="hover:text-slate-900 transition-colors">FAQ</a>
+            <button onClick={() => setCurrentView('shop')} className="text-slate-900 hover:text-emerald-600 transition-colors font-black flex items-center">
+              <ShoppingBag className="w-4 h-4 mr-1" /> SHOP
+            </button>
             <a href="#contact" className="px-5 py-2.5 bg-slate-900 text-white rounded-full hover:bg-slate-700 transition-all">Wholesale Inquiry</a>
           </div>
+          {/* Mobile Shop Button */}
+          <button onClick={() => setCurrentView('shop')} className="md:hidden text-slate-900 font-bold flex items-center">
+             <ShoppingBag className="w-5 h-5" />
+          </button>
         </div>
       </nav>
 
@@ -240,11 +483,11 @@ export default function App() {
               The professional choice for manual therapy. Our high-performance gels and oils bridge the gap between clinical efficacy and natural skin care.
             </p>
             <div className="flex flex-wrap gap-4">
-              <a href="#products" className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center hover:shadow-2xl hover:bg-slate-800 transition-all group">
-                Browse Solutions <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </a>
+              <button onClick={() => setCurrentView('shop')} className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center hover:shadow-2xl hover:bg-slate-800 transition-all group">
+                Shop Online <ShoppingBag className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
               <a href="#contact" className="px-8 py-4 border border-slate-200 rounded-2xl font-bold text-slate-700 hover:bg-slate-50 transition-all">
-                Request Samples
+                Wholesale
               </a>
             </div>
             
@@ -281,10 +524,9 @@ export default function App() {
                    {/* The Card Content */}
                    <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-6 text-center shadow-2xl`}>
                       
-                      {/* IMAGE AREA - Circular, smaller frame, clickable */}
+                      {/* IMAGE AREA */}
                       <div className="flex-1 flex items-center justify-center w-full relative z-10 py-4">
                         {slide.image ? (
-                          // Circular Frame Container with click handler
                           <div 
                             className="w-56 h-56 rounded-full border-[6px] border-white bg-white shadow-xl relative flex items-center justify-center overflow-hidden cursor-pointer group hover:scale-105 transition-transform duration-300"
                             onClick={() => setSelectedHeroSlide(slide)}
@@ -294,7 +536,6 @@ export default function App() {
                               alt={slide.name} 
                               className="w-full h-full object-contain p-2 group-hover:opacity-90 transition-opacity" 
                             />
-                            {/* Expand Icon overlay on hover */}
                             <div className="absolute inset-0 bg-slate-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                <Maximize2 className="text-white w-8 h-8 drop-shadow-lg"/>
                             </div>
@@ -445,18 +686,16 @@ export default function App() {
       <section className="border-t border-slate-100 bg-slate-50/50">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            {/* 1. Cruelty Free - CLEANER LOOK */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-pink-50 text-pink-500 rounded-full">
-                <Rabbit className="w-6 h-6" />
+                {/* Changed to Heart/Wind to ensure no version conflicts */}
+                <Sparkles className="w-6 h-6" /> 
               </div>
               <div className="text-left">
                 <p className="font-bold text-slate-900">Cruelty Free</p>
               </div>
             </div>
 
-            {/* 2. Paraben Free - CLEANER LOOK */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-emerald-50 text-emerald-500 rounded-full">
                 <ShieldCheck className="w-6 h-6" />
@@ -466,16 +705,14 @@ export default function App() {
               </div>
             </div>
 
-            {/* 3. Silicone Free - CLEANER LOOK */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-blue-50 text-blue-500 rounded-full">
-                <Feather className="w-6 h-6" />
+                <Wind className="w-6 h-6" />
               </div>
               <div className="text-left">
                 <p className="font-bold text-slate-900">Silicone Free</p>
               </div>
             </div>
-
           </div>
         </div>
       </section>
@@ -579,7 +816,7 @@ export default function App() {
         </div>
       )}
 
-      {/* Privacy Policy Modal - NEW ADDITION */}
+      {/* Privacy Policy Modal */}
       {showPrivacy && (
         <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl animate-in fade-in duration-300">
           <div className="bg-white w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-[2rem] relative shadow-2xl p-8 md:p-12 animate-in zoom-in-95 duration-300">
@@ -615,7 +852,7 @@ export default function App() {
               <p>We do not sell, trade, or rent your personal identification information to others. We may use third-party service providers (such as Web3Forms for email processing and Vercel for hosting) to help us operate our business.</p>
 
               <h4 className="text-slate-900 font-bold text-lg">4. Contact Us</h4>
-              <p>If you have any questions about this Privacy Policy, please contact us at: <br/><strong>to.laboratories@gmail.com</strong></p>
+              <p>If you have any questions about this Privacy Policy, please contact us at: <br/><strong>info@therapeuticoils.com</strong></p>
             </div>
             
             <div className="mt-8 pt-8 border-t border-slate-100">
@@ -677,7 +914,7 @@ export default function App() {
                   </div>
                   <div>
                     <p className="text-xs text-slate-500 font-bold uppercase">Wholesale Dept</p>
-                    <p className="font-bold">to.laboratories@gmail.com</p>
+                    <p className="font-bold">info@therapeuticoils.com</p>
                   </div>
                 </div>
               </div>
