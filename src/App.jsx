@@ -21,7 +21,8 @@ import {
   ArrowLeft,
   Trash2,
   CreditCard,
-  Banknote
+  Banknote,
+  ChevronDown
 } from 'lucide-react';
 
 // --- DATA: LANDING PAGE ---
@@ -152,42 +153,69 @@ const faqs = [
   }
 ];
 
-// --- DATA: SHOP ITEMS ---
+// --- DATA: SHOP ITEMS WITH RETAIL PRICES & OPTIONS ---
 const shopItems = [
   {
     id: 101,
-    name: "Relaxing Massage Candle",
-    price: 15,
-    description: "Lavender & Chamomile Soy Wax (80g)",
-    icon: <Flame className="w-6 h-6 text-amber-500" />
+    name: "Premium Massage Candle",
+    description: "Natural Soy Wax Blend",
+    icon: <Flame className="w-6 h-6 text-amber-500" />,
+    hasOptions: true,
+    scents: ["Vanilla", "Chamomile", "Oud", "Musk", "Unscented"],
+    sizes: [
+      { label: "Standard (80g)", price: 12 },
+      { label: "Large (160g)", price: 17 }
+    ]
   },
   {
     id: 102,
-    name: "Large Massage Candle",
-    price: 17,
-    description: "Premium Soy Wax Blend (160g)",
-    icon: <Flame className="w-6 h-6 text-amber-600" />
+    name: "Targeted Massage Oil",
+    price: 12, // Estimated RRP based on wholesale
+    description: "Deep tissue blend (250mL)",
+    icon: <Droplets className="w-6 h-6 text-emerald-600" />,
+    hasOptions: true,
+    scents: ["Vanilla", "Chamomile", "Oud", "Musk", "Unscented"],
+    sizes: [{ label: "250mL Bottle", price: 12 }]
   },
   {
     id: 103,
-    name: "Muscle Relief Oil",
-    price: 12,
-    description: "Deep tissue blend with Eucalyptus (100mL)",
-    icon: <Droplets className="w-6 h-6 text-emerald-600" />
+    name: "Pure Ice Gel",
+    price: 12, // RRP from PDF
+    description: "Cryo-Recovery Formula (100mL)",
+    icon: <Wind className="w-6 h-6 text-blue-500" />,
+    hasOptions: false
   },
   {
     id: 104,
-    name: "Pure Ice Gel",
-    price: 12,
-    description: "Cryo-Recovery Formula (100mL)",
-    icon: <Wind className="w-6 h-6 text-blue-500" />
+    name: "Actiflam Cream",
+    price: 12, // RRP from PDF
+    description: "Warming Rosemary Formula (100mL)",
+    icon: <Flame className="w-6 h-6 text-orange-500" />,
+    hasOptions: false
   },
   {
     id: 105,
-    name: "Actiflam Cream",
-    price: 12,
-    description: "Warming Rosemary Formula (100mL)",
-    icon: <Flame className="w-6 h-6 text-orange-500" />
+    name: "Firmessence Cream",
+    price: 14, // RRP from PDF
+    description: "Skin Toning with Cypress (100mL)",
+    icon: <Leaf className="w-6 h-6 text-emerald-500" />,
+    hasOptions: false
+  },
+  {
+    id: 106,
+    name: "Firmessence Oil",
+    price: 14, // RRP from PDF
+    description: "Vitamin E Enriched (250mL)",
+    icon: <Droplets className="w-6 h-6 text-teal-500" />,
+    hasOptions: false
+  },
+  {
+    id: 107,
+    name: "Hydrating Body Lotion",
+    price: 15, // RRP from PDF
+    description: "Aloe Vera Base (Pump Bottle)",
+    icon: <Sparkles className="w-6 h-6 text-purple-500" />,
+    hasOptions: false
   }
 ];
 
@@ -196,9 +224,36 @@ const ShopPage = ({ onBack }) => {
   const [cart, setCart] = useState([]);
   const [formData, setFormData] = useState({ name: '', phone: '', address: '' });
   const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
+  
+  // State for item selections
+  const [selections, setSelections] = useState({}); 
+
+  const handleSelectionChange = (itemId, type, value) => {
+    setSelections(prev => ({
+      ...prev,
+      [itemId]: { ...prev[itemId], [type]: value }
+    }));
+  };
+
+  const getPrice = (item) => {
+    if (item.sizes) {
+      const selectedSize = selections[item.id]?.size || item.sizes[0].label;
+      return item.sizes.find(s => s.label === selectedSize).price;
+    }
+    return item.price;
+  };
 
   const addToCart = (item) => {
-    setCart([...cart, item]);
+    const selectedSize = item.sizes ? (selections[item.id]?.size || item.sizes[0].label) : null;
+    const selectedScent = item.scents ? (selections[item.id]?.scent || item.scents[0]) : null;
+    const finalPrice = getPrice(item);
+    
+    // Create a unique name including options
+    let fullName = item.name;
+    if (selectedSize) fullName += ` (${selectedSize})`;
+    if (selectedScent) fullName += ` - ${selectedScent}`;
+
+    setCart([...cart, { ...item, name: fullName, price: finalPrice }]);
   };
 
   const removeFromCart = (indexToRemove) => {
@@ -237,7 +292,7 @@ const ShopPage = ({ onBack }) => {
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20 animate-in fade-in duration-300">
       {/* Shop Header */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-20">
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
         <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
           <button onClick={onBack} className="flex items-center text-slate-500 hover:text-slate-900 font-bold text-sm">
             <ArrowLeft className="w-5 h-5 mr-2" /> Back to Home
@@ -249,22 +304,64 @@ const ShopPage = ({ onBack }) => {
       <div className="max-w-3xl mx-auto px-6 py-8">
         
         {/* Product List */}
-        <div className="space-y-4 mb-12">
-          <h2 className="text-xl font-bold mb-6">Select Products</h2>
+        <div className="space-y-6 mb-12">
+          <h2 className="text-xl font-bold mb-6 flex items-center"><ShoppingBag className="w-5 h-5 mr-2" /> Select Products</h2>
+          
           {shopItems.map((item) => (
-            <div key={item.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center hover:shadow-md transition-all">
-              <div className="flex items-center space-x-4">
-                <div className="p-3 bg-slate-50 rounded-xl">{item.icon}</div>
-                <div>
-                  <h3 className="font-bold text-lg">{item.name}</h3>
-                  <p className="text-slate-500 text-sm">{item.description}</p>
+            <div key={item.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 bg-slate-50 rounded-xl text-slate-700">{item.icon}</div>
+                  <div>
+                    <h3 className="font-bold text-lg">{item.name}</h3>
+                    <p className="text-slate-500 text-sm">{item.description}</p>
+                  </div>
                 </div>
+                <span className="font-black text-xl text-emerald-600">${getPrice(item)}</span>
               </div>
+
+              {/* Options Selectors */}
+              <div className="space-y-3 mb-4">
+                {item.sizes && (
+                   <div className="flex items-center space-x-2">
+                     <span className="text-xs font-bold uppercase text-slate-400 w-12">Size:</span>
+                     <div className="flex space-x-2">
+                       {item.sizes.map((size) => (
+                         <button
+                           key={size.label}
+                           onClick={() => handleSelectionChange(item.id, 'size', size.label)}
+                           className={`px-3 py-1 text-xs rounded-full border ${
+                             (selections[item.id]?.size || item.sizes[0].label) === size.label 
+                             ? 'bg-slate-900 text-white border-slate-900' 
+                             : 'bg-white text-slate-600 border-slate-200'
+                           }`}
+                         >
+                           {size.label}
+                         </button>
+                       ))}
+                     </div>
+                   </div>
+                )}
+
+                {item.scents && (
+                   <div className="flex items-center space-x-2">
+                     <span className="text-xs font-bold uppercase text-slate-400 w-12">Scent:</span>
+                     <select 
+                       className="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 outline-none"
+                       onChange={(e) => handleSelectionChange(item.id, 'scent', e.target.value)}
+                       value={selections[item.id]?.scent || item.scents[0]}
+                     >
+                       {item.scents.map(scent => <option key={scent} value={scent}>{scent}</option>)}
+                     </select>
+                   </div>
+                )}
+              </div>
+
               <button 
                 onClick={() => addToCart(item)}
-                className="bg-slate-900 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-slate-700 transition-colors"
+                className="w-full bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-slate-700 transition-colors flex items-center justify-center"
               >
-                Add ${item.price}
+                Add to Cart
               </button>
             </div>
           ))}
@@ -284,7 +381,7 @@ const ShopPage = ({ onBack }) => {
               <div className="space-y-3">
                 {cart.map((item, index) => (
                   <div key={index} className="flex justify-between items-center text-sm border-b border-slate-200 pb-2 last:border-0">
-                    <span>{item.name}</span>
+                    <span className="font-medium text-slate-700">{item.name}</span>
                     <div className="flex items-center space-x-4">
                       <span className="font-bold">${item.price}</span>
                       <button onClick={() => removeFromCart(index)} className="text-red-400 hover:text-red-600">
@@ -524,9 +621,10 @@ export default function App() {
                    {/* The Card Content */}
                    <div className={`absolute inset-0 ${slide.color} border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-6 text-center shadow-2xl`}>
                       
-                      {/* IMAGE AREA */}
+                      {/* IMAGE AREA - Circular, smaller frame, clickable */}
                       <div className="flex-1 flex items-center justify-center w-full relative z-10 py-4">
                         {slide.image ? (
+                          // Circular Frame Container with click handler
                           <div 
                             className="w-56 h-56 rounded-full border-[6px] border-white bg-white shadow-xl relative flex items-center justify-center overflow-hidden cursor-pointer group hover:scale-105 transition-transform duration-300"
                             onClick={() => setSelectedHeroSlide(slide)}
@@ -536,6 +634,7 @@ export default function App() {
                               alt={slide.name} 
                               className="w-full h-full object-contain p-2 group-hover:opacity-90 transition-opacity" 
                             />
+                            {/* Expand Icon overlay on hover */}
                             <div className="absolute inset-0 bg-slate-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                <Maximize2 className="text-white w-8 h-8 drop-shadow-lg"/>
                             </div>
@@ -686,16 +785,18 @@ export default function App() {
       <section className="border-t border-slate-100 bg-slate-50/50">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            {/* 1. Cruelty Free - CLEANER LOOK */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-pink-50 text-pink-500 rounded-full">
-                {/* Changed to Heart/Wind to ensure no version conflicts */}
-                <Sparkles className="w-6 h-6" /> 
+                <Rabbit className="w-6 h-6" />
               </div>
               <div className="text-left">
                 <p className="font-bold text-slate-900">Cruelty Free</p>
               </div>
             </div>
 
+            {/* 2. Paraben Free - CLEANER LOOK */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-emerald-50 text-emerald-500 rounded-full">
                 <ShieldCheck className="w-6 h-6" />
@@ -705,14 +806,16 @@ export default function App() {
               </div>
             </div>
 
+            {/* 3. Silicone Free - CLEANER LOOK */}
             <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 bg-blue-50 text-blue-500 rounded-full">
-                <Wind className="w-6 h-6" />
+                <Feather className="w-6 h-6" />
               </div>
               <div className="text-left">
                 <p className="font-bold text-slate-900">Silicone Free</p>
               </div>
             </div>
+
           </div>
         </div>
       </section>
@@ -852,7 +955,7 @@ export default function App() {
               <p>We do not sell, trade, or rent your personal identification information to others. We may use third-party service providers (such as Web3Forms for email processing and Vercel for hosting) to help us operate our business.</p>
 
               <h4 className="text-slate-900 font-bold text-lg">4. Contact Us</h4>
-              <p>If you have any questions about this Privacy Policy, please contact us at: <br/><strong>info@therapeuticoils.com</strong></p>
+              <p>If you have any questions about this Privacy Policy, please contact us at: <br/><strong>to.laboratories@gmail.com</strong></p>
             </div>
             
             <div className="mt-8 pt-8 border-t border-slate-100">
@@ -905,7 +1008,7 @@ export default function App() {
                   </div>
                   <div>
                     <p className="text-xs text-slate-500 font-bold uppercase">Direct Line</p>
-                    <p className="font-bold">+961 03 867 273</p>
+                    <p className="font-bold">+961 03 203 567</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4 text-white">
@@ -914,7 +1017,7 @@ export default function App() {
                   </div>
                   <div>
                     <p className="text-xs text-slate-500 font-bold uppercase">Wholesale Dept</p>
-                    <p className="font-bold">info@therapeuticoils.com</p>
+                    <p className="font-bold">to.laboratories@gmail.com</p>
                   </div>
                 </div>
               </div>
