@@ -164,6 +164,8 @@ const shopItems = [
     id: 107,
     name: "Hydrating Body Lotion",
     price: 15,
+    // PASTE IMAGE LINK HERE:
+    image: null, 
     description: "Aloe Vera Base (500mL Pump Bottle)",
     icon: <Sparkles className="w-6 h-6 text-purple-500" />,
     hasOptions: false,
@@ -176,6 +178,8 @@ const shopItems = [
   {
     id: 101,
     name: "Premium Massage Candle",
+    // PASTE IMAGE LINK HERE:
+    image: null,
     description: "Natural Soy Wax Blend",
     icon: <Flame className="w-6 h-6 text-amber-500" />,
     hasOptions: true,
@@ -194,6 +198,8 @@ const shopItems = [
     id: 102,
     name: "Targeted Massage Oil",
     price: 14, 
+    // PASTE IMAGE LINK HERE:
+    image: null,
     description: "Deep tissue blend (250mL)",
     icon: <Droplets className="w-6 h-6 text-emerald-600" />,
     hasOptions: true,
@@ -209,6 +215,8 @@ const shopItems = [
     id: 103,
     name: "Pure Ice Gel",
     price: 12, 
+    // I added this one for you already:
+    image: "https://i.imgur.com/sLLnGFB.png",
     description: "Cryo-Recovery Formula (100mL)",
     icon: <Wind className="w-6 h-6 text-blue-500" />,
     hasOptions: false,
@@ -222,6 +230,8 @@ const shopItems = [
     id: 104,
     name: "Actiflam Cream",
     price: 12,
+    // PASTE IMAGE LINK HERE:
+    image: null,
     description: "Warming Rosemary Formula (100mL)",
     icon: <Flame className="w-6 h-6 text-orange-500" />,
     hasOptions: false,
@@ -235,6 +245,8 @@ const shopItems = [
     id: 105,
     name: "Firmessence Cream",
     price: 14, 
+    // PASTE IMAGE LINK HERE:
+    image: null,
     description: "Skin Toning with Cypress (100mL)",
     icon: <Leaf className="w-6 h-6 text-emerald-500" />,
     hasOptions: false,
@@ -248,6 +260,8 @@ const shopItems = [
     id: 106,
     name: "Firmessence Oil",
     price: 14, 
+    // PASTE IMAGE LINK HERE:
+    image: null,
     description: "Vitamin E Enriched (250mL)",
     icon: <Droplets className="w-6 h-6 text-teal-500" />,
     hasOptions: false,
@@ -475,7 +489,16 @@ const ShopPage = ({ onBack }) => {
             <div key={item.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="flex justify-between items-start mb-4 cursor-pointer" onClick={() => setViewProduct(item)}>
                 <div className="flex items-center space-x-4">
-                  <div className="p-3 bg-slate-50 rounded-xl text-slate-700">{item.icon}</div>
+                  
+                  {/* Shop Item Image / Icon Logic */}
+                  <div className="w-16 h-16 bg-slate-50 rounded-xl flex items-center justify-center overflow-hidden shrink-0">
+                    {item.image ? (
+                        <img src={item.image} alt={item.name} className="w-full h-full object-contain p-2" />
+                    ) : (
+                        <div className="text-slate-700">{React.cloneElement(item.icon, { size: 24 })}</div>
+                    )}
+                  </div>
+                  
                   <div>
                     <h3 className="font-bold text-lg flex items-center">
                       {item.name}
@@ -555,10 +578,10 @@ const ShopPage = ({ onBack }) => {
           ))}
         </div>
 
-        {/* Product Details Modal */}
+        {/* Product Details Modal - UPGRADED TO CIRCULAR FRAME */}
         {viewProduct && (
           <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-white w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-3xl p-8 relative shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="bg-white w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-[2.5rem] p-8 relative shadow-2xl animate-in zoom-in-95 duration-200">
               <button 
                 onClick={() => setViewProduct(null)}
                 className="absolute top-6 right-6 p-2 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors z-10"
@@ -566,22 +589,33 @@ const ShopPage = ({ onBack }) => {
                 <X className="w-5 h-5" />
               </button>
               
-              <div className="flex flex-col items-center text-center mb-6">
-                <div className="p-6 bg-slate-50 rounded-full mb-4">
-                  {React.cloneElement(viewProduct.icon, { className: "w-12 h-12 text-slate-900" })}
+              <div className="flex flex-col items-center text-center mb-8">
+                
+                {/* HERO STYLE CIRCULAR FRAME */}
+                <div className="w-48 h-48 rounded-full border-[6px] border-slate-100 bg-white shadow-xl relative flex items-center justify-center overflow-hidden mb-6">
+                    {viewProduct.image ? (
+                        <img 
+                            src={viewProduct.image} 
+                            alt={viewProduct.name} 
+                            className="w-full h-full object-contain p-4" 
+                        />
+                    ) : (
+                        <div className="text-slate-900">{React.cloneElement(viewProduct.icon, { size: 64 })}</div>
+                    )}
                 </div>
-                <h2 className="text-2xl font-bold mb-1">{viewProduct.name}</h2>
-                <p className="text-emerald-600 font-bold text-xl">${getPrice(viewProduct)}</p>
+
+                <h2 className="text-3xl font-bold mb-1">{viewProduct.name}</h2>
+                <p className="text-emerald-600 font-bold text-2xl">${getPrice(viewProduct)}</p>
               </div>
 
-              <div className="space-y-6 text-left">
+              <div className="space-y-8 text-left">
                 <div>
                   <h4 className="text-xs font-black uppercase text-slate-400 mb-2">Description</h4>
                   <p className="text-slate-600 text-sm leading-relaxed">{viewProduct.description}. {viewProduct.details?.usage}</p>
                 </div>
 
                 <div>
-                  <h4 className="text-xs font-black uppercase text-slate-400 mb-2">Key Ingredients</h4>
+                  <h4 className="text-xs font-black uppercase text-slate-400 mb-2">Active Ingredients</h4>
                   <div className="flex flex-wrap gap-2">
                     {viewProduct.details?.ingredients.map((ing, i) => (
                       <span key={i} className="px-3 py-1 bg-slate-100 rounded-full text-xs font-medium text-slate-600">
@@ -591,10 +625,10 @@ const ShopPage = ({ onBack }) => {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-slate-100">
+                <div className="pt-6 border-t border-slate-100">
                   <button 
                     onClick={() => addToCart(viewProduct)}
-                    className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-700 transition-colors"
+                    className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-700 transition-colors shadow-lg"
                   >
                     Add to Cart - ${getPrice(viewProduct)}
                   </button>
@@ -704,8 +738,6 @@ const ShopPage = ({ onBack }) => {
                 <div className="mt-4 p-4 bg-red-50 text-red-800 rounded-xl text-sm border border-red-100 leading-relaxed">
                   <strong>Transfer to: +961 03 203 567</strong><br/>
                   <span className="text-xs">
-                    Please calculate at the daily rate if paying in LBP. 
-                    <br/>
                     Important: Include your <strong>Full Name</strong> and <strong>Order Ref Number</strong> in the transfer description.
                   </span>
                 </div>
@@ -1321,30 +1353,25 @@ export default function App() {
                     />
                   </div>
                 </div>
-
-                {/* New Grid for Email and Phone */}
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Work Email</label>
-                      <input 
-                        type="email" 
-                        name="email" 
-                        required 
-                        className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" 
-                        placeholder="john@clinic.com" 
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Phone Number</label>
-                      <input 
-                        type="tel" 
-                        name="phone" 
-                        className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" 
-                        placeholder="03 123 456" 
-                      />
-                    </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Work Email</label>
+                  <input 
+                    type="email" 
+                    name="email" 
+                    required 
+                    className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" 
+                    placeholder="john@clinic.com" 
+                  />
                 </div>
-
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Phone Number</label>
+                  <input 
+                    type="tel" 
+                    name="phone" 
+                    className="w-full px-5 py-3.5 bg-slate-50 rounded-xl border border-slate-100 outline-none focus:ring-2 ring-slate-900/5 transition-all text-sm" 
+                    placeholder="03 123 456" 
+                  />
+                </div>
                 <div className="space-y-1">
                   <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Message</label>
                   <textarea 
