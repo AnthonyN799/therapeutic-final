@@ -199,7 +199,7 @@ const shopItems = [
     name: "Targeted Massage Oil",
     price: 14, 
     // PASTE IMAGE LINK HERE:
-    image: null,
+    image: "https://imgur.com/4D9PFvq",
     description: "Deep tissue blend (250mL)",
     icon: <Droplets className="w-6 h-6 text-emerald-600" />,
     hasOptions: true,
