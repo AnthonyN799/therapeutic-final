@@ -179,7 +179,7 @@ const shopItems = [
     id: 101,
     name: "Premium Massage Candle",
     // PASTE IMAGE LINK HERE:
-    image: null,
+    image: "https://imgur.com/OJsrnB1.png",
     description: "Natural Soy Wax Blend",
     icon: <Flame className="w-6 h-6 text-amber-500" />,
     hasOptions: true,
