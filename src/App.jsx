@@ -231,7 +231,7 @@ const shopItems = [
     name: "Actiflam Cream",
     price: 12,
     // PASTE IMAGE LINK HERE:
-    image: "https://imgur.com/undefined.png",
+    image: "https://imgur.com/YjGjz0G.png",
     description: "Warming Rosemary Formula (100mL)",
     icon: <Flame className="w-6 h-6 text-orange-500" />,
     hasOptions: false,
